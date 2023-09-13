@@ -3,13 +3,13 @@ const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const session = require('express-session');
-dotenv.config();
+
 const passport = require("passport");
-const { loginCheck } = require("./auth/passport");
-loginCheck(passport);
+// const { loginCheck } = require("./auth/passport");
+// loginCheck(passport);
 
 // Mongo DB conncetion
-const database = "mongodb://localhost:27017/adminpanel"
+const database = "mongodb://192.168.254.104/db"
 
 mongoose
   .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
@@ -30,7 +30,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 //Routes
-app.use("/", require("./routes/login"));
+// app.use("/", require("./routes/login"));
 
 const PORT = process.env.PORT || 3000;
 
