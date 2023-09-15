@@ -9,7 +9,7 @@ const passport = require("passport");
 // loginCheck(passport);
 
 // Mongo DB conncetion
-const database = "mongodb://192.168.254.104/db"
+const database = "mongodb+srv://mohitdhimanzeroit:Mohit@023_@cluster0.0pw1i1q.mongodb.net/"
 
 mongoose
   .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
