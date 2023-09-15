@@ -18,8 +18,8 @@ mongoose
   .then(() => console.log("Mongodb connect"))
   .catch((err) => console.log(err));
 
-app.set("view engine", "ejs");
-app.set('views', path.join(__dirname, 'views'));
+// app.set("view engine", "ejs");
+// app.set('views', path.join(__dirname, 'views'));
 //BodyParsing
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
@@ -33,7 +33,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 //Routes
 app.use("/", require("./admin/application/routes/login"));
+// app.get("/",(req,res)=>{
+//   res.render(__dirname + "views")
+// })
 
-const PORT = process.env.PORT || 4111;
+
+app.use(express.static(__dirname + ""));
+app.set("views", [
+ path.join(__dirname, "admin/application/views"),
+ 
+]);
+app.set("view engine", "ejs");
+
+// require("./app")();
+// require("./admin")()
+
+
+const PORT = process.env.PORT || 8082;
 
 app.listen(PORT, console.log("Server has started at port " + PORT));
