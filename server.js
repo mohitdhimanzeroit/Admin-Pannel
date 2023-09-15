@@ -5,8 +5,8 @@ const dotenv = require("dotenv");
 const session = require('express-session');
 
 const passport = require("passport");
-// const { loginCheck } = require("./auth/passport");
-// loginCheck(passport);
+const { loginCheck } = require("./admin/application/auth/passport");
+loginCheck(passport);
 
 // Mongo DB conncetion
 const database = "mongodb+srv://mohitdhimanzeroit:Mohit@023_@cluster0.0pw1i1q.mongodb.net/"
@@ -30,7 +30,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 //Routes
-// app.use("/", require("./routes/login"));
+app.use("/", require("./admin/application/routes/login"));
 
 const PORT = process.env.PORT || 3000;
 
