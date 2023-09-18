@@ -1,16 +1,340 @@
-<%- include('layout.ejs'); %>
-<div class="container">
-    <div class="row justify-content-center">
+    
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./include/header'); %>
 
-        <h3>My name is <%= user.name %> </h3> &nbsp;
-        <h3>I stay at <%= user.location %> </h3> <br>
+    <body>
+        <div id="banner">
+            <div class="container-scroller">
+                <!-- partial:partials/_navbar.html -->
+                <%- include('./include/topbar'); %>
+                    <!-- partial -->
+                    <div class="container-fluid page-body-wrapper">
+                        <!-- partial:partials/_sidebar.html -->
+                        <%- include('./include/sidebar'); %>
 
-    </div>
-</div>
-<div>
-    <a href="/logout"> <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Logout</button> </a>
-</div>
+                            <!-- partial -->
+                            <div class="main-panel">
+                                <div class="content-wrapper">
+                                    <div class="row">
+                                        <div class="col-md-12 grid-margin">
+                                            <div class="row">
+                                                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                                    <h3 class="font-weight-bold">Welcome to Admin Page</h3>
 
-</body>
+                                                </div>
+                                                <div class="col-12 col-xl-4">
+                                                    <div class="justify-content-end d-flex">
+                                                        <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 grid-margin stretch-card">
+                                            <div class="card tale-bg">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4 stretch-card transparent">
+                                                        <div class="card card-dark-blue">
+                                                            <div class="card-body22">
+
+                                                                <p class="mb-4">Total Users</p>
+                                                                <p class="fs-30 mb-2">
+                                                                </p>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4 stretch-card transparent">
+                                                        <div class="card card-dark-blue">
+                                                            <div class="card-body22">
+                                                                <p class="mb-4">Total Search</p>
+                                                                <p class="fs-30 mb-2">
+                                                              
+                                                                </p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 grid-margin transparent">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-tale">
+                                                        <div class="card-body22">
+                                                            <p class="mb-4"> Cancelled Orders</p>
+                                                            <p class="fs-30 mb-2">
+                                                            
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-dark-blue">
+                                                        <div class="card-body22">
+                                                            <p class="mb-4">Completed Orders</p>
+                                                            <p class="fs-30 mb-2">
+                                                                
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <!--Start Edit User Modal HTML -->
+                                <div id="editEmployeeModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form>
+                                                <input type="hidden" id="hiddeneditwithdrawal" />
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Cancel Processing Request</h4>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">
+                                                        &times;
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p id="messagePara"></p>
+                                                    <p class="text-warning">
+                                                        <small>This action cannot be undone.</small>
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <input type="button" class="btn btn-default" data-dismiss="modal"
+                                                        value="No" />
+
+                                                    <input style="background-color: #01805c; color: #fff" type="button"
+                                                        class="btn btn" value="Yes"
+                                                        onclick="KWACHA_ADMIN.cancelProcessing()" id="usereditdata" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--End Edit User Modal HTML -->
+
+
+
+
+
+
+
+                                <footer class="footer">
+                                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
+                                        </span>
+                                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"><a
+                                                href="#">
+                                            </a></span>
+                                    </div>
+                                </footer>
+                                <!-- partial -->
+                            </div>
+                            <!-- main-panel ends -->
+
+                    </div>
+                    <!-- page-body-wrapper ends -->
+            </div>
+        </div>
+        <!-- container-scroller -->
+
+        <!-- End custom js for this page-->
+    </body>
 
 </html>
+
+
+
+
+<%- include('./include/footer'); %>
+
+
+
+    <script>
+        var KWACHA_ADMIN = {};
+
+        KWACHA_ADMIN.init = function (pageNum, sortBy, sortOrder, searchValue, perPage) {
+            page_num = pageNum ? pageNum : 0;
+            var KWACHA_ADMIN_PAGE_CONFIG = {
+                url: "inprogressListAjax-list-ajax",
+                pageNumber: page_num,
+                sortBy: sortBy,
+                sortOrder: sortOrder,
+                keywords: searchValue,
+                perPage: perPage,
+            };
+            KWACHA_MAIN.loadPageData(pageNum, KWACHA_ADMIN_PAGE_CONFIG);
+        };
+        KWACHA_ADMIN.sortBy = function (sortBy, sortOrder, perPage) {
+            $("#loading").show();
+            if (sortOrder == 'ASC') {
+                sortOrder = 'DESC';
+            } else {
+                sortOrder = 'ASC';
+            }
+
+            var KWACHA_ADMIN_PAGE_CONFIG = {
+                url: "inprogressListAjax-list-ajax",
+                pageNumber: 0,
+                sortBy: sortBy,
+                sortOrder: sortOrder,
+                perPage: perPage,
+            };
+            KWACHA_MAIN.loadPageData(0, KWACHA_ADMIN_PAGE_CONFIG);
+        }
+        KWACHA_ADMIN.init(0, 'uo_created', 'ASC');
+
+
+
+        $("#pagination").change(function () {
+            let perPage = $('#pagination').val();
+            $("#loading").show();
+            var KWACHA_ADMIN_PAGE_CONFIG = {
+                url: "inprogressListAjax-list-ajax",
+                pageNumber: 0,
+                sortBy: 'uo_created',
+                sortOrder: 'ASC',
+                perPage: perPage,
+            };
+            KWACHA_MAIN.loadPageData(0, KWACHA_ADMIN_PAGE_CONFIG);
+        });
+
+        $("#search").on('input', function () {
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $(this).trigger('search');
+            }.bind(this), 2000);
+        }).on('search', function () {
+            if (this.value) {
+                $("#loading").show();
+                let searchValue = $("#search").val();
+                KWACHA_ADMIN.init(0, 'uo_created', 'ASC', searchValue);
+
+            }
+        });
+
+    </script>
+
+
+
+    <script>
+        //Start-user Update
+
+        //Start-user Update
+        function seteditWithdrawalId(userId, activeStatus) {
+            if (activeStatus == '1') {
+                $("#messagePara").html('Are You Sure,You Want To Cancel This Request.');
+            } else {
+                $("#messagePara").html('Are You Sure,You Want To Cancel This Request.');
+            }
+            $("#hiddeneditwithdrawal").val(userId);
+        }
+
+        KWACHA_ADMIN.cancelProcessing = function () {
+            let userUuid = $("#hiddeneditwithdrawal").val();
+
+            if (userUuid) {
+                $.ajax({
+                    url: "/admin/cancel-processing",
+                    data: "withdrawalId=" + userUuid,
+
+                    cache: false,
+                    processData: false,
+                    method: "POST",
+                    type: "POST",
+                    success: function (_res) {
+                        $("#hiddenedituser").val("");
+                        window.location.reload();
+
+                        let successConfig = {
+                            title: "Confirmation",
+                            message: `Operation performed successfully.`,
+                            type: "success",
+                        };
+                        KWACHA_MAIN.sweetAlert(successConfig);
+                    },
+                    error: function (e) {
+                        $("#userdata").html("");
+                        let responseText = JSON.parse(e.responseText);
+                        let errorConfig = {
+                            title: "Error",
+                            message: responseText.message,
+                            type: "error",
+                        };
+                        KWACHA_MAIN.sweetAlert(errorConfig);
+                    },
+                });
+            }
+        };
+
+        //End-user Update
+
+        //End-user Delete
+    </script>
+
+
+
+
+
+    <script>
+        KWACHA_ADMIN.genrateData = function () {
+
+            var workbook = XLSX.utils.book_new();
+            var worksheet_data = document.getElementById("excelfile");
+            var worksheet = XLSX.utils.table_to_sheet(worksheet_data);
+
+            workbook.SheetNames.push("Test");
+            workbook.Sheets["Test"] = worksheet;
+
+            exportExcelFile(workbook);
+
+            // if (userUuid) {
+            $.ajax({
+                url: "/admin/downloadExcel",
+                cache: false,
+                processData: false,
+                method: "GET",
+                type: "GET",
+                success: function (_res) {
+                    $("#hiddenDonation").val("");
+
+                    let successConfig = {
+                        title: "Confirmation",
+                        message: `Operation successfully.`,
+                        type: "success",
+                    };
+                    KWACHA_MAIN.sweetAlert(successConfig);
+                },
+                error: function (e) {
+                    let errorConfig = {
+                        title: "Error",
+                        type: "error",
+                    };
+                    KWACHA_MAIN.sweetAlert(errorConfig);
+                },
+            });
+
+            function exportExcelFile(workbook) {
+                return XLSX.writeFile(workbook, "donation.xlsx");
+            }
+        };
+
+
+
+
+    </script>

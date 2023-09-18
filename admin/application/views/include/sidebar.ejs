@@ -1,0 +1,63 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <!-- /*------------------------------dashboard--------------------------------*/-->
+  
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/dashboard">
+          <i class="icon-grid menu-icon"></i>
+          <span class="menu-title">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="collapse"
+          href="#users-elements"
+          aria-expanded="false"
+          aria-controls="form-elements"
+        >
+          <i class="fa fa-users" aria-hidden="true"></i>
+          <span class="menu-title">Users</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="users-elements">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/create-user">Create User</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/users-list">Users List</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+     
+  
+       <!-- /*------------------------------transaction history--------------------------------*/-->
+  
+       <li class="nav-item">
+        <a
+          class="nav-link"
+          data-toggle="collapse"
+          href="#transaction-elements"
+          aria-expanded="false"
+          aria-controls="form-elements"
+        >
+        <i class="icon-columns menu-icon"></i>
+          <span class="menu-title">Search</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="transaction-elements">
+          <ul class="nav flex-column sub-menu">
+           
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/search-list">Search History </a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="/admin/withdrawal-list">Withdrawal Request   </a>
+            </li> -->
+          </ul>
+        </div>
+  
+  </nav>
+  
