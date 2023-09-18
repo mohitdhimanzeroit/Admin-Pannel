@@ -93,41 +93,6 @@
 
 
 
-                                <!--Start Edit User Modal HTML -->
-                                <div id="editEmployeeModal" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form>
-                                                <input type="hidden" id="hiddeneditwithdrawal" />
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Cancel Processing Request</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">
-                                                        &times;
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p id="messagePara"></p>
-                                                    <p class="text-warning">
-                                                        <small>This action cannot be undone.</small>
-                                                    </p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" class="btn btn-default" data-dismiss="modal"
-                                                        value="No" />
-
-                                                    <input style="background-color: #01805c; color: #fff" type="button"
-                                                        class="btn btn" value="Yes"
-                                                        onclick="KWACHA_ADMIN.cancelProcessing()" id="usereditdata" />
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--End Edit User Modal HTML -->
-
-
 
 
 
@@ -162,178 +127,16 @@
 
 <%- include('./include/footer'); %>
 
+<style>.card.card-tale {
+    background: blue;
+    color: #ffffff;
+  }
+  
+  .card.card-dark-blue {
+    background: blue;
+    color: #ffffff;
+  } 
 
+</style>
 
-    <!-- <script>
-        var KWACHA_ADMIN = {};
-
-        KWACHA_ADMIN.init = function (pageNum, sortBy, sortOrder, searchValue, perPage) {
-            page_num = pageNum ? pageNum : 0;
-            var KWACHA_ADMIN_PAGE_CONFIG = {
-                url: "inprogressListAjax-list-ajax",
-                pageNumber: page_num,
-                sortBy: sortBy,
-                sortOrder: sortOrder,
-                keywords: searchValue,
-                perPage: perPage,
-            };
-            KWACHA_MAIN.loadPageData(pageNum, KWACHA_ADMIN_PAGE_CONFIG);
-        };
-        KWACHA_ADMIN.sortBy = function (sortBy, sortOrder, perPage) {
-            $("#loading").show();
-            if (sortOrder == 'ASC') {
-                sortOrder = 'DESC';
-            } else {
-                sortOrder = 'ASC';
-            }
-
-            var KWACHA_ADMIN_PAGE_CONFIG = {
-                url: "inprogressListAjax-list-ajax",
-                pageNumber: 0,
-                sortBy: sortBy,
-                sortOrder: sortOrder,
-                perPage: perPage,
-            };
-            KWACHA_MAIN.loadPageData(0, KWACHA_ADMIN_PAGE_CONFIG);
-        }
-        KWACHA_ADMIN.init(0, 'uo_created', 'ASC');
-
-
-
-        $("#pagination").change(function () {
-            let perPage = $('#pagination').val();
-            $("#loading").show();
-            var KWACHA_ADMIN_PAGE_CONFIG = {
-                url: "inprogressListAjax-list-ajax",
-                pageNumber: 0,
-                sortBy: 'uo_created',
-                sortOrder: 'ASC',
-                perPage: perPage,
-            };
-            KWACHA_MAIN.loadPageData(0, KWACHA_ADMIN_PAGE_CONFIG);
-        });
-
-        $("#search").on('input', function () {
-            clearTimeout(this.delay);
-            this.delay = setTimeout(function () {
-                $(this).trigger('search');
-            }.bind(this), 2000);
-        }).on('search', function () {
-            if (this.value) {
-                $("#loading").show();
-                let searchValue = $("#search").val();
-                KWACHA_ADMIN.init(0, 'uo_created', 'ASC', searchValue);
-
-            }
-        });
-
-    </script>
-
-
-
-    <script>
-        //Start-user Update
-
-        //Start-user Update
-        function seteditWithdrawalId(userId, activeStatus) {
-            if (activeStatus == '1') {
-                $("#messagePara").html('Are You Sure,You Want To Cancel This Request.');
-            } else {
-                $("#messagePara").html('Are You Sure,You Want To Cancel This Request.');
-            }
-            $("#hiddeneditwithdrawal").val(userId);
-        }
-
-        KWACHA_ADMIN.cancelProcessing = function () {
-            let userUuid = $("#hiddeneditwithdrawal").val();
-
-            if (userUuid) {
-                $.ajax({
-                    url: "/admin/cancel-processing",
-                    data: "withdrawalId=" + userUuid,
-
-                    cache: false,
-                    processData: false,
-                    method: "POST",
-                    type: "POST",
-                    success: function (_res) {
-                        $("#hiddenedituser").val("");
-                        window.location.reload();
-
-                        let successConfig = {
-                            title: "Confirmation",
-                            message: `Operation performed successfully.`,
-                            type: "success",
-                        };
-                        KWACHA_MAIN.sweetAlert(successConfig);
-                    },
-                    error: function (e) {
-                        $("#userdata").html("");
-                        let responseText = JSON.parse(e.responseText);
-                        let errorConfig = {
-                            title: "Error",
-                            message: responseText.message,
-                            type: "error",
-                        };
-                        KWACHA_MAIN.sweetAlert(errorConfig);
-                    },
-                });
-            }
-        };
-
-        //End-user Update
-
-        //End-user Delete
-    </script>
-
-
-
-
-
-    <script>
-        KWACHA_ADMIN.genrateData = function () {
-
-            var workbook = XLSX.utils.book_new();
-            var worksheet_data = document.getElementById("excelfile");
-            var worksheet = XLSX.utils.table_to_sheet(worksheet_data);
-
-            workbook.SheetNames.push("Test");
-            workbook.Sheets["Test"] = worksheet;
-
-            exportExcelFile(workbook);
-
-            // if (userUuid) {
-            $.ajax({
-                url: "/admin/downloadExcel",
-                cache: false,
-                processData: false,
-                method: "GET",
-                type: "GET",
-                success: function (_res) {
-                    $("#hiddenDonation").val("");
-
-                    let successConfig = {
-                        title: "Confirmation",
-                        message: `Operation successfully.`,
-                        type: "success",
-                    };
-                    KWACHA_MAIN.sweetAlert(successConfig);
-                },
-                error: function (e) {
-                    let errorConfig = {
-                        title: "Error",
-                        type: "error",
-                    };
-                    KWACHA_MAIN.sweetAlert(errorConfig);
-                },
-            });
-
-            function exportExcelFile(workbook) {
-                return XLSX.writeFile(workbook, "donation.xlsx");
-            }
-        };
-
-
-
-
-    </script> -->
+ 

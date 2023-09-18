@@ -100,7 +100,7 @@ body.stop-scrolling {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #ea7d7d;
+  background-color:blue;
   color: white;
   line-height: 24px;
   text-align: center;
@@ -131,7 +131,7 @@ body.stop-scrolling {
   content: "";
   width: 20px;
   height: 6px;
-  background-color: #f06e57;
+  background-color:blue;
   border-radius: 3px;
   position: absolute;
   top: 50%;

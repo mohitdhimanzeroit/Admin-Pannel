@@ -92,3 +92,14 @@ td.n i {
 }
 
 .container { margin-top: 99px; }
+.card.card-tale {
+  background: blue;
+  color: #ffffff;
+}
+
+.card.card-dark-blue {
+  background: blue;
+  color: #ffffff;
+}
+
+

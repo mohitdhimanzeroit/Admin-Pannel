@@ -23,10 +23,10 @@
         <div class="collapse" id="users-elements">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item">
-              <a class="nav-link" href="/admin/create-user">Create User</a>
+              <a class="nav-link" href="/admin/application/views/create-user.ejs">Create User</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/admin/users-list">Users List</a>
+              <a class="nav-link" href="/admin/application/views/users-list.ejs">Users List</a>
             </li>
           </ul>
         </div>
@@ -60,4 +60,20 @@
         </div>
   
   </nav>
-  
+  <style>
+    .sidebar .nav .nav-item.active>.nav-link {
+    background: blue;
+    position: relative;
+}
+.sidebar .nav.sub-menu {
+    margin-bottom: 0;
+    margin-top: 0;
+    list-style: none;
+    padding: 10px 30px;
+    background: blue;
+    padding-bottom: 12px;
+    border-radius: 10px;
+}
+
+
+  </style>
