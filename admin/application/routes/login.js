@@ -8,11 +8,14 @@ const {
 } = require("../controllers/loginController");
 const { dashboardView } = require("../controllers/dashboardController");
 const { protectRoute } = require("../auth/protect");
+const { forgetpasswordView, resetpasswordView } = require("../controllers/passwordController");
 
 const router = express.Router();
 
 router.get("/register", registerView);
 router.get("/login", loginView);
+router.get("/forgetpassword",forgetpasswordView);
+router.get("/resetpassword",resetpasswordView)
 //Dashboard
 router.get("/dashboard", protectRoute, dashboardView);
 
