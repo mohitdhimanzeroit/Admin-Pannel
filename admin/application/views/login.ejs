@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Admin</title>
     <!-- plugins:css -->
-    <link rel="icon" type="image/x-icon" href="https://png.pngtree.com/png-vector/20191125/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_2035379.jpg">
+    <link rel="icon" type="image/x-icon"
+        href="https://png.pngtree.com/png-vector/20191125/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_2035379.jpg">
 
     <link rel="stylesheet" href="/admin/application/theme/vendors/feather/feather.css">
     <link rel="stylesheet" href="/admin/application/theme/vendors/ti-icons/css/themify-icons.css">
@@ -51,17 +52,18 @@
             font-size: 19px !important;
             font-weight: 500 !important;
         }
-        .btn-primary, .wizard>.actions a {
-    color: #fff;
-    background-color: #007bff !important;
-    border-color: #007bff !important;
+
+        .btn-primary,
+        .wizard>.actions a {
+            color: #fff;
+            background-color: #007bff !important;
+            border-color: #007bff !important;
         }
-    .auth .auth-form-light {
-    background: #ffffff;
-    border: 10px solid blue;
-}
 
-
+        .auth .auth-form-light {
+            background: #ffffff;
+            border: 10px solid blue;
+        }
     </style>
 </head>
 
@@ -73,7 +75,8 @@
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left py-5 px-4 px-sm-5 text-center">
                             <div class="brand-logo">
-                                <img src="https://png.pngtree.com/png-vector/20191125/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_2035379.jpg" alt="logo">
+                                <img src="https://png.pngtree.com/png-vector/20191125/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_2035379.jpg"
+                                    alt="logo">
                             </div>
                             <h6 class="signContinue">Sign in to continue.</h6>
                             <h4 class="helloLetsStart">Hello! let's get started</h4>
@@ -94,7 +97,7 @@
                                 <div class="my-2 d-flex justify-content-between align-items-center">
                                     <div class="form-check">
                                     </div>
-                                    <a href="/admin/forgot-password" class="forgotPassword">Forgot password?</a>
+                                    <a href="/forgetpassword" class="forgotPassword">Forgot password?</a>
                                 </div>
                             </form>
                         </div>
@@ -126,7 +129,7 @@
 
     $(function () {
 
-        $("#adminLogin").validate({
+        $("#login").validate({
             errorPlacement: function (error, element) {
                 $(element)
                     .closest("form")
@@ -155,9 +158,9 @@
             },
 
             submitHandler: function () {
-                let formData = $("#adminLogin").serialize();
+                let formData = $("#login").serialize();
                 $.ajax({
-                    url: '/admin/login',
+                    url: '/login',
                     data: formData,
                     cache: false,
                     processData: false,
@@ -166,7 +169,7 @@
                     success: function (_res) {
                         localStorage.setItem("token", _res.payload.token);
                         localStorage.setItem("adminName", _res.payload.au_name);
-                        $('#adminLogin').trigger("reset");
+                        $('#login').trigger("reset");
                         window.location.href = "dashboard";
                     },
                     error: function (e) {
