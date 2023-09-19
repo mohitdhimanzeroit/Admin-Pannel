@@ -51,6 +51,17 @@
             font-size: 19px !important;
             font-weight: 500 !important;
         }
+        .btn-primary, .wizard>.actions a {
+    color: #fff;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+        }
+    .auth .auth-form-light {
+    background: #ffffff;
+    border: 10px solid blue;
+}
+
+
     </style>
 </head>
 
@@ -68,7 +79,7 @@
                             <h4 class="helloLetsStart">Hello! let's get started</h4>
 
 
-                            <form class="pt-3" id="adminLogin" method="post" role="form">
+                            <form class="pt-3" id="login" method="post" action="/login">
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-lg" id="email" name="email"
                                         placeholder="Username">
