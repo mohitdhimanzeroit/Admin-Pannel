@@ -9,7 +9,7 @@ const authObj = require(basePath + "/admin/application/controllers/auth"),
 //   "/admin/routerlication/controllers/search");
 
 const router = express.Router();
-router.post("/admin/login", authObj.login);
+router.post("/login", authObj.login);
 
 router.get("/login", homeObj.login);
 router.get("/admin/dashboard", homeObj.index);

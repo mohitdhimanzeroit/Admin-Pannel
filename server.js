@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 const { loginCheck } = require("./admin/application/auth/passport");
 loginCheck(passport);
 
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 8080);
 global.app = app;
 global.jwt = jwt;
 global.basePath = __dirname;
@@ -54,6 +54,6 @@ app.set("view engine", "ejs");
 // require("./admin")()
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, console.log("Server has started at port " + PORT));

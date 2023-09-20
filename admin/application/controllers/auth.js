@@ -16,6 +16,7 @@ const passwordHash = require('password-hash'),
     
             let checkEmailObj = {
                 au_email: req.body.email
+                
             },
                 checkEmailDetail = await mongoHelper.getData(checkEmailObj, 'test.users');
             if (checkEmailDetail && checkEmailDetail.length > 0) {

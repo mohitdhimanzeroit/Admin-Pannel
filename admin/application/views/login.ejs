@@ -40,7 +40,7 @@
           <div class="col-right">
             <div class="login-form">
               <h2>Login</h2>
-              <form  id="adminLogin" method="post" role="form">
+              <form  id="login" method="post" role="form">
                 <p>
                   <input type="email" id="email" name="email" placeholder="Email" />
                   
@@ -280,7 +280,7 @@ p {
 
   $(function () {
 
-    $("#adminLogin").validate({
+    $("#login").validate({
       errorPlacement: function (error, element) {
         $(element)
           .closest("form")
@@ -309,9 +309,9 @@ p {
       },
 
       submitHandler: function () {
-        let formData = $("#adminLogin").serialize();
+        let formData = $("#login").serialize();
         $.ajax({
-          url: '/admin/login',
+          url: '/login',
           data: formData,
           cache: false,
           processData: false,
@@ -320,7 +320,7 @@ p {
           success: function (_res) {
             localStorage.setItem("token", _res.payload.token);
             localStorage.setItem("adminName", _res.payload.au_name);
-            $('#adminLogin').trigger("reset");
+            $('#login').trigger("reset");
             window.location.href = "dashboard";
           },
           error: function (e) {
