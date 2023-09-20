@@ -40,7 +40,7 @@
           <div class="col-right">
             <div class="login-form">
               <h2>Login</h2>
-              <form  id="loginUser" method="post" action="/login">
+              <form  id="login" method="post" role="form">
                 <p>
                   <input type="email" id="email" name="email" placeholder="Email" />
                   
@@ -274,73 +274,74 @@ p {
 </style>
 </html>
 
-<!-- <script>
+
+<script>
 
 
-    $(function () {
+  $(function () {
 
-        $("#login").validate({
-            errorPlacement: function (error, element) {
-                $(element)
-                    .closest("form")
-                    .find("label[for='" + element.attr("id") + "']")
-                    .append(error);
-            },
+    $("#login").validate({
+      errorPlacement: function (error, element) {
+        $(element)
+          .closest("form")
+          .find("label[for='" + element.attr("id") + "']")
+          .append(error);
+      },
 
-            errorElement: "span",
-            rules: {
+      errorElement: "span",
+      rules: {
 
-                email: {
-                    required: true,
-                    email: true,
-                    maxlength: 70,
-                },
-
-
-                password: {
-                    required: true,
-                    minlength: 8,
-                    maxlength: 100,
-                },
+        email: {
+          required: true,
+          email: true,
+          maxlength: 70,
+        },
 
 
+        password: {
+          required: true,
+          minlength: 8,
+          maxlength: 100,
+        },
 
-            },
 
-            submitHandler: function () {
-                let formData = $("#login").serialize();
-                $.ajax({
-                    url: '/login',
-                    data: formData,
-                    cache: false,
-                    processData: false,
-                    method: 'POST',
-                    type: 'POST',
-                    success: function (_res) {
-                        localStorage.setItem("token", _res.payload.token);
-                        localStorage.setItem("adminName", _res.payload.au_name);
-                        $('#login').trigger("reset");
-                        window.location.href = "dashboard";
-                    },
-                    error: function (e) {
 
-                        let responseText = JSON.parse(e.responseText);
-                        let errorConfig = {
-                            title: 'Error',
-                            message: responseText.message,
-                            type: 'error'
-                        }
-                        KWACHA_MAIN.sweetAlert(errorConfig);
-                    }
+      },
 
-                });
+      submitHandler: function () {
+        let formData = $("#login").serialize();
+        $.ajax({
+          url: '/login',
+          data: formData,
+          cache: false,
+          processData: false,
+          method: 'POST',
+          type: 'POST',
+          success: function (_res) {
+            localStorage.setItem("token", _res.payload.token);
+            localStorage.setItem("adminName", _res.payload.au_name);
+            $('#login').trigger("reset");
+            window.location.href = "dashboard";
+          },
+          error: function (e) {
 
-            },
-
+            let responseText = JSON.parse(e.responseText);
+            let errorConfig = {
+              title: 'Error',
+              message: responseText.message,
+              type: 'error'
+            }
+            KWACHA_MAIN.sweetAlert(errorConfig);
+          }
 
         });
 
+      },
+
+
     });
 
+  });
 
-</script> -->
+
+</script>
