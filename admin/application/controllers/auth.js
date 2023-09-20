@@ -1,8 +1,8 @@
 
 const passwordHash = require('password-hash'),
-    helper = require('../helpers/index'),
-    mongoHelper = require('../helpers/mongo_helper'),
-    authModel = require('../model/auth_model');
+    helper = require('../helper/index'),
+    mongoHelper = require('../helper/mongo_helper'),
+    authModel = require('../models/auth_model');
 
     let authObj = {};
     authObj.login = async function (req, res) {
@@ -17,7 +17,7 @@ const passwordHash = require('password-hash'),
             let checkEmailObj = {
                 au_email: req.body.email
             },
-                checkEmailDetail = await mongoHelper.getData(checkEmailObj, 'admin_users');
+                checkEmailDetail = await mongoHelper.getData(checkEmailObj, 'test.users');
             if (checkEmailDetail && checkEmailDetail.length > 0) {
     
                 let userData = checkEmailDetail[0];

@@ -19,7 +19,7 @@ newModelObj.generalMail = async function (emailData) {
         port: 465,
         secure: true,
         auth: {
-            user: 'anoop.zeroit@gmail.com',
+            user: 'mohitdhiman.zeroit@gmail.com',
             pass: '123456789'
         }
     });

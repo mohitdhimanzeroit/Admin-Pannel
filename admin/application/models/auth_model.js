@@ -2,8 +2,8 @@
 const q = require("q"),
   passwordHash = require("password-hash"),
   { v4 } = require("uuid"),
-  helper = require("../helpers/index"),
-  mongoHelper = require("../helpers/mongo_helper"),
+  helper = require("../helper/index"),
+
   randomstring = require("randomstring"),
   commonModel = require("./common_model");
 
@@ -17,7 +17,7 @@ let authModel = {};
 */
 authModel.sendActivationEmail = async function (body, activationCode) {
   let to = body.email,
-    from = "Kawacha-mania <anoop.zeroit@gmail.com>";
+    from = "Kawacha-mania <mohitdhiman.zeroit@gmail.com>";
 
   if (body.name) {
     username = body.name;

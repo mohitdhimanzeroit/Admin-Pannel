@@ -68,7 +68,7 @@ helper.errorHandler = function (res, options, httpStatuCode = 501) {
  *
  * @param     :
  * @returns   :
- * @developer :  Diksha
+ * @developer : 
  */
 helper.getUidByToken = function (req) {
   let token = "",

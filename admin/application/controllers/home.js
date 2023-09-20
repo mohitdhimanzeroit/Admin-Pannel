@@ -1,7 +1,6 @@
 
-const helper = require("../helpers/index");
-const mongoHelper = require("../helpers/mongo_helper");
-
+const helper = require("../helper/index");
+const mongoHelper = require("../helper/mongo_helper");
 let homeObj = {};
 
 /**
@@ -82,8 +81,8 @@ homeObj.searchListPage = async function (req, res) {
  * @returns   :
  * @developer :
  */
-homeObj.adminLogin = async function (req, res) {
-  res.render("adminLogin", {
+homeObj.login = async function (req, res) {
+  res.render("login", {
 
   });
 };

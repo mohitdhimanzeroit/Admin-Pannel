@@ -5,34 +5,39 @@ const dotenv = require("dotenv");
 const session = require('express-session');
 const path = require('path');
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
+
 const { loginCheck } = require("./admin/application/auth/passport");
 loginCheck(passport);
 
-
+app.set("port", process.env.PORT || 3000);
+global.app = app;
+global.jwt = jwt;
+global.basePath = __dirname;
 
 // Mongo DB conncetion
-const database = "mongodb+srv://mohitdhimanzeroit:Mohit%40023_@cluster0.0pw1i1q.mongodb.net/"
+// const database = "mongodb+srv://mohitdhimanzeroit:Mohit%40023_@cluster0.0pw1i1q.mongodb.net/"
 
-mongoose
-  .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
-  .then(() => console.log("Mongodb connect"))
-  .catch((err) => console.log(err));
+// mongoose
+//   .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
+//   .then(() => console.log("Mongodb connect"))
+//   .catch((err) => console.log(err));
 
 // app.set("view engine", "ejs");
 // app.set('views', path.join(__dirname, 'views'));
 //BodyParsing
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
-    secret:'oneboy',
-    saveUninitialized: true,
-    resave: true
-  }));
-  
+  secret: 'oneboy',
+  saveUninitialized: true,
+  resave: true
+}));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
 //Routes
-app.use("/", require("./admin/application/routes/login"));
+app.use("/", require("./admin/application/routes/index"));
 // app.get("/",(req,res)=>{
 //   res.render(__dirname + "views")
 // })
@@ -40,8 +45,8 @@ app.use("/", require("./admin/application/routes/login"));
 
 app.use(express.static(__dirname + ""));
 app.set("views", [
- path.join(__dirname, "admin/application/views"),
- 
+  path.join(__dirname, "admin/application/views"),
+
 ]);
 app.set("view engine", "ejs");
 
@@ -49,6 +54,6 @@ app.set("view engine", "ejs");
 // require("./admin")()
 
 
-const PORT = process.env.PORT || 8082;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, console.log("Server has started at port " + PORT));

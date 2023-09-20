@@ -1,37 +1,41 @@
+// const basePath = require('basePath');
 
-const authObj = require(basePath + "/admin/application/controller/auth"),
-  homeObj = require(basePath + "/admin/application/controller/home"),
-  userObj = require(basePath + "/admin/application/controller/user");
-searchObj = require(basePath + "/admin/application/controller/user");
-searchObj = require(basePath +
-  "/admin/application/controller/search");
+const express = require("express");
+const authObj = require(basePath + "/admin/application/controllers/auth"),
+    homeObj = require(basePath + "/admin/application/controllers/home")
+//   userObj = require(basePath + "/admin/routerlication/controllers/user");
+// searchObj = require(basePath + "/admin/routerlication/controllers/user");
+// searchObj = require(basePath +
+//   "/admin/routerlication/controllers/search");
 
-module.exports = function () {
-  app.post("/admin/login", authObj.login);
-  app.get("/admin", homeObj.adminLogin);
-  app.get("/admin/dashboard", homeObj.index);
-  app.get("/admin/create-user", homeObj.insertUserPage);
-  app.get("/admin/users-list", homeObj.userListPage);
+const router = express.Router();
+router.post("/admin/login", authObj.login);
 
-  app.get("/admin/search-list", homeObj.searchListPage);
-  app.post("/admin/search-list-ajax", searchObj.searchListAjax);
-  /*------------------------------Users--------------------------------*/
-  app.post("/admin-logout", userObj.adminLogout);
-  app.post("/admin/insert-user", userObj.insertUser);
-  app.get("/admin/changePassword", homeObj.changePasswordPage);
-  app.post("/admin/user-list-ajax", userObj.userListAjax);
-  app.post("/admin/delete-user", userObj.deleteUser);
-  app.post("/admin/edit-user", userObj.editUser);
-  /*------------------------------Reset and forget password--------------------------------*/
-  app.get("/admin/reset-password", homeObj.resetpwdScreen);
-  app.get("/admin/forgot-password", homeObj.forgetpasswordScreen);
-  /* -------------------------Authentication------------------------------*/
-  app.post("/register", authObj.register);
-  app.post("/activate-account", authObj.activateAccount);
-  app.post("/forget-password-email", authObj.userForgotPassword);
-  app.post("/admin/reset-admin-password", authObj.userResetPassword);
-  app.post("/admin/change-admin-password", authObj.adminChangePassword);
-  app.post("/resend-activation-code", authObj.resendActivationCode);
-  app.post("/resend-activation-code", authObj.resendActivationCode);
-  app.post("/admin/search-list-ajax", searchObj.searchListAjax);
-};
+router.get("/login", homeObj.login);
+router.get("/admin/dashboard", homeObj.index);
+router.get("/admin/create-user", homeObj.insertUserPage);
+router.get("/admin/users-list", homeObj.userListPage);
+
+router.get("/admin/search-list", homeObj.searchListPage);
+//   router.post("/admin/search-list-ajax", searchObj.searchListAjax);
+/*------------------------------Users--------------------------------*/
+//   router.post("/admin-logout", userObj.adminLogout);
+//   router.post("/admin/insert-user", userObj.insertUser);
+router.get("/admin/changePassword", homeObj.changePasswordPage);
+//   router.post("/admin/user-list-ajax", userObj.userListAjax);
+//   router.post("/admin/delete-user", userObj.deleteUser);
+//   router.post("/admin/edit-user", userObj.editUser);
+/*------------------------------Reset and forget password--------------------------------*/
+//   router.get("/admin/reset-password", homeObj.resetpassword);
+//   router.get("/admin/forgot-password", homeObj.forgetpassword);
+/* -------------------------Authentication------------------------------*/
+router.post("/register", authObj.register);
+router.post("/activate-account", authObj.activateAccount);
+router.post("/forget-password-email", authObj.userForgotPassword);
+router.post("/admin/reset-admin-password", authObj.userResetPassword);
+router.post("/admin/change-admin-password", authObj.adminChangePassword);
+router.post("/resend-activation-code", authObj.resendActivationCode);
+router.post("/resend-activation-code", authObj.resendActivationCode);
+//   router.post("/admin/search-list-ajax", searchObj.searchListAjax);
+
+module.exports = router;
