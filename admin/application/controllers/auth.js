@@ -18,7 +18,7 @@ const passwordHash = require('password-hash'),
                 au_email: req.body.email
                 
             },
-                checkEmailDetail = await mongoHelper.getData(checkEmailObj, 'test.users');
+                checkEmailDetail = await mongoHelper.getData(checkEmailObj, 'test');
             if (checkEmailDetail && checkEmailDetail.length > 0) {
     
                 let userData = checkEmailDetail[0];
@@ -93,7 +93,7 @@ const passwordHash = require('password-hash'),
 */
 authObj.register = async function (req, res) {
 
-    if (req && req.body && req.body.email && req.body.password && req.body.name && req.body.lastName && req.body.name != '0') {
+    if (req && req.body && req.body.email && req.body.password && req.body.name && req.body.lastName) {
 
         let validEmail = await helper.isEmailValid(req.body.email);
 
@@ -102,7 +102,7 @@ authObj.register = async function (req, res) {
             if (typeof req.body.email == 'string' && typeof req.body.password == 'string' && typeof req.body.name == 'string') {
 
                 let obj = {
-                    message: '',
+                    message: '',        
                     status: false
                 };
 
@@ -121,39 +121,40 @@ authObj.register = async function (req, res) {
                     helper.errorHandler(res, obj);
                 }
             }
-            let emailObj = { 'uc_email': req.body.email };
-            let userDetailObj = await mongoHelper.getData(emailObj, 'users_credential');
+            // let emailObj = { 'uc_email': req.body.email };
+            // let userDetailObj = await mongoHelper.getData(emailObj, 'test');
 
-            if (userDetailObj && userDetailObj.length > 0 && userDetailObj[0].uc_email) {
+            // if (userDetailObj && userDetailObj.length > 0 && userDetailObj[0].uc_email) {
 
-                let statusCode = '',
-                    message = '';
+            //     let statusCode = '',
+            //         message = '';
 
-                if (userDetailObj.uc_active == '0') {
+            //     if (userDetailObj.uc_active == '0') {
 
-                    statusCode = "ZT-E1002",
-                        message = 'User already exists but not active.';
+            //         statusCode = "ZT-E1002",
+            //             message = 'User already exists but not active.';
 
-                } else if (userDetailObj.uc_d == '1') {
+            //     } else if (userDetailObj.uc_d == '1') {
 
-                    message = 'User prohibited, please contact knowex support team for help.';
+            //         message = 'User prohibited, please contact knowex support team for help.';
 
-                } else {
+            //     } else {
 
-                    statusCode = "ZT-E1001",
-                        message = 'User already exists. Please signup with other account.';
+            //         statusCode = "ZT-E1001",
+            //             message = 'User already exists. Please signup with other account.';
 
-                }
+            //     }
 
-                let obj = {
-                    code: statusCode,
-                    message: message,
-                    status: false
-                };
+            //     let obj = {
+            //         code: statusCode,
+            //         message: message,
+            //         status: false
+            //     };
 
-                helper.errorHandler(res, obj);
+            //     helper.errorHandler(res, obj);
 
-            } else {
+            // } 
+            else {
 
                 let result = await authModel.register(req.body);
 

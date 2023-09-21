@@ -48,7 +48,7 @@ authModel.forgotPassword = async function (email) {
     selectObj = {
       au_email: email,
     },
-    results = await mongoHelper.getData(selectObj, "admin_users");
+    results = await mongoHelper.getData(selectObj, "test");
 
   if (results && results.length > 0) {
     if (results[0].au_active == "1") {
@@ -58,14 +58,14 @@ authModel.forgotPassword = async function (email) {
         },
         result = await mongoHelper.updateData(
           selectObj,
-          "admin_users",
+          "test",
           updateObj
         );
 
       if (result) {
         let emailArray = {
           to: email,
-          from: "Kawacha-mania <rohit.zeroit@gmail.com>",
+          from: "Kawacha-mania <mohitdhiman.zeroit@gmail.com>",
           subject: "Forgot password ",
           body: "Your forgot password token is " + randomNumber + ".",
         };
@@ -104,7 +104,7 @@ authModel.resetPassword = async function (body) {
     selectObj = {
       au_email: body.email,
     },
-    results = await mongoHelper.getData(selectObj, "admin_users");
+    results = await mongoHelper.getData(selectObj, "test");
 
   if (results && results.length > 0) {
     if (results[0].au_activation_token == body.code) {
@@ -116,7 +116,7 @@ authModel.resetPassword = async function (body) {
       },
         result = await mongoHelper.updateData(
           selectObj,
-          "admin_users",
+          "test",
           updateObj
         );
 
@@ -155,7 +155,7 @@ authModel.activateAccount = async function (body) {
   let sendCode = {
     code: "ZT-E1010",
   };
-  let results = await mongoHelper.getData(selectObj, "admin_users");
+  let results = await mongoHelper.getData(selectObj, "test");
 
   if (results && results.length > 0) {
     if (results[0].uc_active == "1") {
@@ -174,7 +174,7 @@ authModel.activateAccount = async function (body) {
 
       let updateData = await mongoHelper.updateData(
         selectObj,
-        "admin_users",
+        "test",
         updateObj
       );
 
@@ -204,7 +204,7 @@ authModel.resendActivationCode = async function (email) {
   let selectObj = {
     au_email: email,
   };
-  let results = await mongoHelper.getData(selectObj, "admin_users");
+  let results = await mongoHelper.getData(selectObj, "test");
 
   if (results && results.length > 0) {
     if (results[0].au_active == "0") {
@@ -214,14 +214,14 @@ authModel.resendActivationCode = async function (email) {
       },
         result = await mongoHelper.updateData(
           selectObj,
-          "admin_users",
+          "test",
           updateObj
         );
 
       if (result) {
         let emailArray = {
           to: email,
-          from: "Kawacha-mania <dikshaj.zeroit@gmail.com>",
+          from: "Kawacha-mania <mohitdhiman.zeroit@gmail.com>",
           subject: "Resending Account Activation ",
           body: " Your activation code is " + randomNumber + ".",
         };
@@ -314,7 +314,7 @@ authModel.adminChangePassword = async function (body, userId) {
     au_uuid: userId.userId
   };
   // return false;
-  let result = await mongoHelper.getData(checkingUuid, 'admin_users');
+  let result = await mongoHelper.getData(checkingUuid, 'test');
 
   let verifyPassword = passwordHash.verify(body.currentPassword, result[0].au_password);
   // return false;
@@ -324,8 +324,8 @@ authModel.adminChangePassword = async function (body, userId) {
       au_password: hashedPassword
     };
     // return false;
-    let resultOne = await mongoHelper.updateData(checkingUuid, "admin_users", passwordObj);
-    let resultO = await mongoHelper.getData(checkingUuid, 'admin_users');
+    let resultOne = await mongoHelper.updateData(checkingUuid, "test", passwordObj);
+    let resultO = await mongoHelper.getData(checkingUuid, 'test');
     // return false;
     if (resultOne) {
       deferred.resolve(resultOne);

@@ -10,15 +10,15 @@ const registerView = (req, res) => {
 //Post Request for Register
 
 const registerUser = (req, res) => {
-  const { name, email, location, password, confirm } = req.body;
+  const { name, email, location, password, lastName } = req.body;
 
-  if (!name || !email || !password || !confirm) {
+  if (!name || !email || !password || !lastName) {
     console.log("Fill empty fields");
   }
 
   //Confirm Passwords
 
-  if (password !== confirm) {
+  if (password ) {
     console.log("Password must match");
   } else {
     //Validation
@@ -29,7 +29,7 @@ const registerUser = (req, res) => {
           name,
           email,
           password,
-          confirm,
+          lastName,
         });
       } else {
         //Validation

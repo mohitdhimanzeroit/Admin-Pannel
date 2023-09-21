@@ -86,15 +86,25 @@ homeObj.login = async function (req, res) {
 
   });
 };
+homeObj.register = async function (req, res) {
+  res.render("register", {
 
-homeObj.passwordForget = async function (req, res) {
-  res.render("passwordForget", {
+  });
+};
+homeObj.dashboard = async function (req, res) {
+  res.render("dashboard", {
 
   });
 };
 
-homeObj.resetPassword = async function (req, res) {
-  res.render("resetPassword", {
+homeObj.forgetpassword = async function (req, res) {
+  res.render("forgetpassword", {
+
+  });
+};
+
+homeObj.resetpassword = async function (req, res) {
+  res.render("resetpassword", {
 
   });
 };

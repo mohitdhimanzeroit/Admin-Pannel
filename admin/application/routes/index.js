@@ -12,7 +12,12 @@ const router = express.Router();
 router.post("/login", authObj.login);
 
 router.get("/login", homeObj.login);
-router.get("/admin/dashboard", homeObj.index);
+
+router.post("/register", authObj.register);
+
+router.get("/register",homeObj.register)
+// router.get("/dashboard", homeObj.index);
+router.get("/dashboard", homeObj.dashboard); 
 router.get("/admin/create-user", homeObj.insertUserPage);
 router.get("/admin/users-list", homeObj.userListPage);
 
@@ -26,10 +31,10 @@ router.get("/admin/changePassword", homeObj.changePasswordPage);
 //   router.post("/admin/delete-user", userObj.deleteUser);
 //   router.post("/admin/edit-user", userObj.editUser);
 /*------------------------------Reset and forget password--------------------------------*/
-//   router.get("/admin/reset-password", homeObj.resetpassword);
-//   router.get("/admin/forgot-password", homeObj.forgetpassword);
+  router.get("/resetpassword", homeObj.resetpassword);
+  router.get("/forgetpassword", homeObj.forgetpassword);
 /* -------------------------Authentication------------------------------*/
-router.post("/register", authObj.register);
+
 router.post("/activate-account", authObj.activateAccount);
 router.post("/forget-password-email", authObj.userForgotPassword);
 router.post("/admin/reset-admin-password", authObj.userResetPassword);
