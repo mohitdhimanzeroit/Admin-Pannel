@@ -35,7 +35,7 @@ authModel.sendActivationEmail = async function (body, activationCode) {
   if (commonModel.generalMail(emailArray)) {
     return true;
   }
-  return false;
+  return false; 
 };
 /**
 * Forgot password model
@@ -46,7 +46,7 @@ authModel.sendActivationEmail = async function (body, activationCode) {
 authModel.forgotPassword = async function (email) {
   let deferred = q.defer(),
     selectObj = {
-      au_email: email,
+      email: email,
     },
     results = await mongoHelper.getData(selectObj, "test");
 
@@ -145,7 +145,7 @@ authModel.resetPassword = async function (body) {
 * Activate account model
 * @param     :
 * @returns   :
-* @developer : Vipin, Ajay
+* @developer : 
 */
 authModel.activateAccount = async function (body) {
   let deferred = q.defer();

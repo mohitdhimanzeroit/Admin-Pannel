@@ -6,7 +6,7 @@ const MongoClient = require("mongodb").MongoClient,
 
 let mongoObj = {},
   dbName = mongoConfig.dbName,
-  url = mongoConfig.url;
+  mongo_url = mongoConfig.url;
 const options = {
   keepAlive: true,
   useUnifiedTopology: true,
@@ -55,7 +55,11 @@ const options = {
 //   let deferred = q.defer();
 
 //   if (dataObj && tableName) {
-//     MongoClient.connect(url, options, function (err, db) {
+//     MongoClient.connect(mongo_url,{
+//            maxPoolSize: 50,
+//             wtimeoutMS: 2500,
+//       //       // useNewUrlParser: true
+//          }, options, function (err, db) {
 //       if (err) {
 //         deferred.resolve(false);
 //       } else {
@@ -85,39 +89,43 @@ const options = {
 //  * @developer   :
 //  * @ModifiedBy  :
 //  */
-mongoObj.getData = async (dataObj, tableName) => {
-  let deferred = q.defer();
+// mongoObj.getData = async (dataObj, tableName) => {
+//   let deferred = q.defer();
 
-  if (dataObj && tableName) {
-    MongoClient.connect(url, options, function (err, db) {
-      if (err) {
-        deferred.resolve([]);
-      } else {
-        let database = db.db(dbName);
+//   if (dataObj && tableName) {
+//     MongoClient.connect(mongo_url, {
+//       maxPoolSize: 50,
+//       wtimeoutMS: 2500,
+//       // useNewUrlParser: true
+//     }, options, function (err, db) {
+//       if (err) {
+//         deferred.resolve([]);
+//       } else {
+//         let database = db.db(dbName);
 
-        database
-          .collection(tableName)
-          .find(dataObj)
-          .toArray(function (err, res) {
-            if (err) {
-              deferred.resolve([]);
-            }
+//         database
+//           .collection(tableName)
+//           .find(dataObj)
+//           .toArray(function (err, res) {
+//             if (err) {
+//               deferred.resolve([]);
+//             }
 
-            if (res) {
-              db.close();
-              deferred.resolve(res);
-            } else {
-              deferred.resolve([]);
-            }
-          });
-      }
-    });
-  } else {
-    deferred.resolve([]);
-  }
+//             if (res) {
+//               db.close();
+//               deferred.resolve(res);
+//             } else {
+//               deferred.resolve([]);
+//             }
+//           });
+//       }
+//     });
+//   } else {
+//     deferred.resolve([]);
+//   }
 
-  return deferred.promise;
-};
+//   return deferred.promise;
+// };
 
 // /**
 //  * This function is using to

@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
   },
   location: {   
      type: String,    
-     default: "India", 
+     default: "New York", 
       },
   date: {
     type: Date,

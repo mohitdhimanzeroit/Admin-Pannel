@@ -10,18 +10,18 @@ const jwt = require("jsonwebtoken");
 const { loginCheck } = require("./admin/application/auth/passport");
 loginCheck(passport);
 
-app.set("port", process.env.PORT || 8080);
+app.set("port", process.env.PORT || 8081);
 global.app = app;
 global.jwt = jwt;
 global.basePath = __dirname;
 
 // Mongo DB conncetion
-// const database = "mongodb+srv://mohitdhimanzeroit:Mohit%40023_@cluster0.0pw1i1q.mongodb.net/"
+const database = "mongodb+srv://mohitdhimanzeroit:Mohit%40023_@cluster0.0pw1i1q.mongodb.net/"
 
-// mongoose
-//   .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
-//   .then(() => console.log("Mongodb connect"))
-//   .catch((err) => console.log(err));
+mongoose
+  .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => console.log("Mongodb connect"))
+  .catch((err) => console.log(err));
 
 // app.set("view engine", "ejs");
 // app.set('views', path.join(__dirname, 'views'));
@@ -54,6 +54,6 @@ app.set("view engine", "ejs");
 // require("./admin")()
 
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 
 app.listen(PORT, console.log("Server has started at port " + PORT));
