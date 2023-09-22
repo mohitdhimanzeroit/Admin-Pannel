@@ -31,10 +31,12 @@ router.get("/dashboard", homeObj.dashboard);
 //   router.post("/admin/delete-user", userObj.deleteUser);
 //   router.post("/admin/edit-user", userObj.editUser);
 /*------------------------------Reset and forget password--------------------------------*/
-  router.get("/resetpassword", homeObj.resetpassword);
+  // router.get("/resetpassword", homeObj.resetpassword);
   router.get("/forgetpassword", homeObj.forgetpassword);
+  router.get("/forgetpassword", authObj.forgetpassword);
   router.post("/forgetpassword", authObj.forgetpassword);
-  router.post("/resetpassword", authObj.resetpassword);
+   router.get("/resetpassword", authObj.resetpassword)
+  router.post("/resetpasswordtoken", authObj.resetpasswordtoken);
 /* -------------------------Authentication------------------------------*/
 
 // router.post("/activate-account", authObj.activateAccount);

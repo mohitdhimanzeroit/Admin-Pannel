@@ -103,11 +103,11 @@ homeObj.forgetpassword = async function (req, res) {
   });
 };
 
-homeObj.resetpassword = async function (req, res) {
-  res.render("resetpassword", {
+// homeObj.resetpassword = async function (req, res) {
+//   res.render("resetpassword", {
 
-  });
-};
+//   });
+// };
 
 /**
  * This function is using to

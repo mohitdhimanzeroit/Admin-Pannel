@@ -6,6 +6,10 @@ const session = require('express-session');
 const path = require('path');
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+const ejs = require('ejs');
+// const transporter = require('transporter')
 
 const { loginCheck } = require("./admin/application/auth/passport");
 loginCheck(passport);
@@ -22,6 +26,18 @@ mongoose
   .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => console.log("Mongodb connect"))
   .catch((err) => console.log(err));
+
+// Set up Nodemailer for sending emails
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: "mohitdhiman.zeroit@gmail.com",
+    pass: "ptqc vgnm lskb lgaq" 
+  }
+});
 
 // app.set("view engine", "ejs");
 // app.set('views', path.join(__dirname, 'views'));
