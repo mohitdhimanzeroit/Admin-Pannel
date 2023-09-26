@@ -116,7 +116,7 @@
             <div class="col-right">
                 <div class="login-form">
                     <h2>Register</h2>
-                    <form id="register" method="post" action="/signup">
+                    <form id="register" method="post" action="/users/signup">
                         <p>
                             <input type="text" name="name" id="name" placeholder=" Your Name" />
                         </p>
@@ -133,9 +133,9 @@
                             <input class="btn" type="submit" value="Register" />
                         </p>
                         <p>
-                            <a href="/login">login</a>
+                            <a href="/users/login">login</a>
                         </p>
-                    </form>
+                    </form> 
                 </div>
             </div>
         </div>
@@ -355,73 +355,3 @@
 </html>
 
 
-<script>
-
-
-    $(function () {
-
-        $("#login").validate({
-            errorPlacement: function (error, element) {
-                $(element)
-                    .closest("form")
-                    .find("label[for='" + element.attr("id") + "']")
-                    .append(error);
-            },
-
-            errorElement: "span",
-            rules: {
-
-                email: {
-                    required: true,
-                    email: true,
-                    maxlength: 70,
-                },
-
-
-                password: {
-                    required: true,
-                    minlength: 8,
-                    maxlength: 100,
-                },
-
-
-
-            },
-
-            submitHandler: function () {
-                let formData = $("#login").serialize();
-                $.ajax({
-                    url: '/login',
-                    data: formData,
-                    cache: false,
-                    processData: false,
-                    method: 'POST',
-                    type: 'POST',
-                    success: function (_res) {
-                        localStorage.setItem("token", _res.payload.token);
-                        localStorage.setItem("adminName", _res.payload.au_name);
-                        $('#login').trigger("reset");
-                        window.location.href = "dashboard";
-                    },
-                    error: function (e) {
-
-                        let responseText = JSON.parse(e.responseText);
-                        let errorConfig = {
-                            title: 'Error',
-                            message: responseText.message,
-                            type: 'error'
-                        }
-                        KWACHA_MAIN.sweetAlert(errorConfig);
-                    }
-
-                });
-
-            },
-
-
-        });
-
-    });
-
-
-</script>
