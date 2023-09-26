@@ -73,37 +73,43 @@
 // const PORT = process.env.PORT || 8081;
 
 // app.listen(PORT, console.log("Server has started at port " + PORT));
-const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config({ path: ".env" });
+const express = require(`express`)
+const app = express()
+ const path = require('path');
+const mongoose = require(`mongoose`)
+const dotenv = require('dotenv');
+dotenv.config();
+const PORT = process.env.PORT
+const DB_URL = process.env.DB_URL
+const cors = require('cors')
+const Nodemailer = require('nodemailer')
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use(cors())
 
-const userRoutes = require("../Admin-Pannel/admin/application/routes/userRoutes");
-const AppError = require("../Admin-Pannel/admin/application/utils/error");
-const errorHandler = require("../Admin-Pannel/admin/application/middlewares/errorHandler");
 
-const app = express();
+const userRoutes = require('./admin/application/routes/userRoutes')
 
-mongoose
-  .connect("mongodb+srv://mohitdhimanzeroit:Mohit%40023_@cluster0.0pw1i1q.mongodb.net/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("> DB connection successful ... ");
-  });
+app.use(express.static(__dirname + ""));
+app.set("views", [
+  path.join(__dirname, "admin/application/views"),
 
-app.use(express.json());
+]);
+app.set("view engine", "ejs");
 
-app.use("/api/users", userRoutes);
 
-app.all("*", (req, res, next) => {
-  next(new AppError(`can't find ${req.originalUrl} on this server`, 404));
-});
 
-app.use(errorHandler);
 
-const PORT = 8081;
+app.use('/users', userRoutes)
 
-app.listen(PORT, () => {
-  console.log(`> App running on port ${PORT} ...`);
-});
+
+
+
+
+mongoose.connect(DB_URL).then(
+  () => { console.log(`Database connected =====>`) },
+  err => { console.log(err) }
+);
+app.listen(PORT, (() => {
+  console.log(`server running on ===> ` + PORT)
+})) 

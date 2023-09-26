@@ -100,7 +100,7 @@ homeObj.dashboard = async function (req, res) {
 homeObj.forgetpassword = async function (req, res) {
   res.render("forgetpassword", {
 
-  });
+  }); 
 };
 
 // homeObj.resetpassword = async function (req, res) {

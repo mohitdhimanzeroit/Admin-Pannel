@@ -1,25 +1,22 @@
-const express = require("express");
-const {
-  signup,
-  login,
-  protect,
-  forgotPassword,
-  resetPassword,
-  changePassword,
-} = require("../controllers/authController");
-const { me, updateMe } = require("../controllers/userController");
+const express=require('express')
+const router=express.Router()
+router.use(express.urlencoded({ extended: false }))
+router.use(express.json())
+const userRoutes=require('../controllers/userController')
+const {userAuth} =require('../middlewares/userAuth')
 
-const router = express.Router();
+router.post('/signup',userRoutes.signup)
+router.get('/register',userRoutes.register)
+router.post('/signin',userRoutes.signin)
+router.get('/login',userRoutes.login)
+router.post('/forgotPassword',userRoutes.forgotPassword)
+router.get('/resetpassword',userRoutes.resetpassword)
+router.post('/verifyEmail',userRoutes.verifyEmail)
 
-router.post("/signup", signup);
-router.post("/login", login);
+router.post('/validateUser',userRoutes.validateUser)
+router.post('/updatePassword',userRoutes.updatePassword)
 
-router.post("/forgotPassword", forgotPassword);
-router.patch("/resetPassword/:token", resetPassword);
 
-router.patch("/changePassword", protect, changePassword);
 
-router.get("/me", protect, me);
-router.patch("/updateMe", protect, updateMe);
-
-module.exports = router;
+// router.post('/signup')
+module.exports=router
