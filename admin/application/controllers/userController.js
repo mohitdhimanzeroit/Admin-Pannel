@@ -33,11 +33,29 @@ const register = async  (req, res) =>{
 };
 
 const resetpassword = async  (req, res) =>{
+  const foundUser =  await userModel.findOne({updatePasswordToken: req.query.token});
+    if (!foundUser) {
+      res.json({data: "expire"})
+    }else{
+
+    
+  console.log(req.query)
   res.render("resetpassword", {
+      userId: foundUser?._id
+  });
+}
+}
+const changepassword = async  (req, res) =>{
+  res.render("changepassword", {
 
   });
 }
 
+const dashboard = async  (req, res) =>{
+  res.render("dashboard", {
+
+  });
+}
 const signup = async (req, res) => {
   userData = req.body;
   console.log(userData);
@@ -123,10 +141,7 @@ const signin = async (req, res) => {
       );
       if (passwordCompareresult) {
         var token = jwt.sign({ id: userNameResult[0].id }, key);
-        res.status(200).json({
-          success: true,
-          data: token,
-        });
+        return res.redirect("/users/dashboard")
       }
     } catch (e) {
       console.log(e);
@@ -136,6 +151,22 @@ const signin = async (req, res) => {
     res.status(400).send(`Email is invalid`);
   }
 };
+function generateRandomString(length) {
+  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let randomString = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    randomString += charset.charAt(randomIndex);
+  }
+
+  return randomString;
+}
+
+// Generate a random string of 5 characters
+
+
+
 const forgotPassword = async (req, res) => {
   if (!req.body.email) {
     return res.status(400).send("Please Enter Email");
@@ -146,9 +177,11 @@ const forgotPassword = async (req, res) => {
     if (data?.length < 1) {
         return res.status(400).send("No Account Found please SignUp");
     }
-    console.log(data[0]._id);
+    const randomString = generateRandomString(5);
+    const dd = await userModel.findOneAndUpdate({email: req.body.email},{updatePasswordToken:randomString})
+    console.log(dd);
     var token = jwt.sign({ id: data[0]._id }, key);
-      let url = `http://localhost:8081/users/resetpassword??confirmEmail?link=${token}`;
+      let url = `http://localhost:8081/users/resetpassword?token=${randomString}`;
     // let html = `<a href=${url}>click here</a> to Reset Your password`
     let html = `
         
@@ -242,14 +275,15 @@ const validateUser = async (req, res) => {
 };
 
 const updatePassword = async (req, res) => {
+  console.log(`sdds`,req.query.userId)
   try {
     console.log(req.body);
-    let { token, password } = req.body;
-    console.log(token, password);
-    var decode = jwt.verify(token, key);
-    let hashPassword = await passwordEncyption(password);
-    let data = await userModel.findByIdAndUpdate(decode.id, {
+    let { newpwd } = req.body;
+  
+    let hashPassword = await passwordEncyption(newpwd);
+    let data = await userModel.findByIdAndUpdate({_id:req.query.userId}, {
       password: hashPassword,
+      updatePasswordToken:""
     });
     res.status(200).json({ success: true });
   } catch (e) {
@@ -297,5 +331,7 @@ register,
   forgotPassword,
   validateUser,
   updatePassword,
+  changepassword,
 resetpassword,
+dashboard,
 }

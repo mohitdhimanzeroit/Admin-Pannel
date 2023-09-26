@@ -15,8 +15,8 @@ const user = mongoose.Schema(
     referalCode: { type: String },
     isActive: { type: Number, default: 1 },
     isVerified: { type: Boolean, default: true },
-    emailIdentifier:{type:String}
-    
+    emailIdentifier:{type:String},
+    updatePasswordToken:{type:String}
     // 1=> active ,2=>disable,3=> deleted
   },
   { timestamps: true }

@@ -7,9 +7,12 @@ const {userAuth} =require('../middlewares/userAuth')
 
 router.post('/signup',userRoutes.signup)
 router.get('/register',userRoutes.register)
+// router.get("/login/confirmpassword",)
 router.post('/signin',userRoutes.signin)
 router.get('/login',userRoutes.login)
+router.get('/dashboard',userRoutes.dashboard)
 router.post('/forgotPassword',userRoutes.forgotPassword)
+router.get('/changepassword',userRoutes.changepassword)
 router.get('/resetpassword',userRoutes.resetpassword)
 router.post('/verifyEmail',userRoutes.verifyEmail)
 
