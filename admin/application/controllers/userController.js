@@ -16,15 +16,14 @@ const request = require("request");
 dotenv.config();
 const crypto = require('crypto');
 const key = process.env.JWT_KEY;
+const flash = require('connect-flash')
 const saltRounds = 10;
 const FRONT_END_URL = process.env.FRONT_END_URL;
 const { sendEmail } = require("../helper/SendEmail");
 const { userModel } = require("../models/userModel");
 const{userAuth} = require("../middlewares/userAuth")
 const login = async  (req, res) =>{
-  res.render("login", {
-
-  });
+  res.render("login", {success:''});
 };
 const register = async  (req, res) =>{
   res.render("register", {
@@ -125,6 +124,7 @@ const signin = async (req, res) => {
   var userData = req.body;
   console.log(userData)
   if (!userData.email || !userData.password) {
+    // req.flash('message','Username and Password are mandatory')
     return res.status(400).send("Username and Password are mandatory");
   }
   let userNameResult = await userModel.find({
@@ -141,6 +141,7 @@ const signin = async (req, res) => {
       );
       if (passwordCompareresult) {
         var token = jwt.sign({ id: userNameResult[0].id }, key);
+        req.flash('message','Saved Success')
         return res.redirect("/users/dashboard")
       }
     } catch (e) {

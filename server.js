@@ -83,10 +83,18 @@ const PORT = process.env.PORT
 const DB_URL = process.env.DB_URL
 const cors = require('cors')
 const Nodemailer = require('nodemailer')
+const session = require('express-session')
+const flash = require('connect-flash')
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors())
-
+app.use(session({
+  secret:'secret',
+  cookie:{maxAge : 60000},
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(flash());
 
 const userRoutes = require('./admin/application/routes/userRoutes')
 
