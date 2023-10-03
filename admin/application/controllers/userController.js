@@ -60,11 +60,13 @@ const signup = async (req, res) => {
   console.log(userData);
   userData.created_at = new Date();
   if (!userData.email || !userData.password) {
-    res.status(400).send("Username and Password are mandatory");
+    // res.status(400).send("Username and Password are mandatory");
+     res.send("<script> alert('Username and Password are mandatory'); window.location =  '/users/register'; </script>")
     return;
   }
   if (userData.password?.length < 8) {
-    res.status(400).send("Password should be minimum 8 Charecter");
+    // res.status(400).send("Password should be minimum 8 Charecter");
+    res.send("<script> alert('Password should be minimum 8 Charecter'); window.location =  '/users/register'; </script>")
     return;
   }
   let userNameResult = await userModel.find({
@@ -73,7 +75,8 @@ const signup = async (req, res) => {
   });
   console.log(userNameResult);
   if (userNameResult.length > 0) {
-    res.status(400).send(`Email already exist`);
+    // res.status(400).send(`Email already exist`);
+    res.send("<script> alert('Email already exist'); window.location =  '/users/register'; </script>")
     return;
   }
   let hashPassword = await passwordEncyption(userData.password);
@@ -110,7 +113,8 @@ const signup = async (req, res) => {
         " Admin || Confirm Email"
       );
       console.log(r)
-      res.status(200).send(`created`);
+      // res.status(200).send(`created`);
+      res.send("<script> alert('created'); window.location =  '/users/login'; </script>")
     } catch (e) {
       console.log(e);
       res.status(500).send(`Something went`);
@@ -124,7 +128,7 @@ const signin = async (req, res) => {
   var userData = req.body;
   console.log(userData)
   if (!userData.email || !userData.password) {
-    // req.flash('message','Username and Password are mandatory')
+   
     // return res.status(400).send("Username and Password are mandatory");
     return res.send("<script> alert('Username and Password are mandatory'); window.location =  '/users/login'; </script>")
   }
@@ -296,7 +300,8 @@ const updatePassword = async (req, res) => {
     res.send("<script> alert('Success'); window.location =  '/users/login'; </script>")
   } catch (e) {
     console.error(e);
-    res.status(400).json({ success: false, message: e });
+    // res.status(400).json({ success: false, message: e });
+    res.send("<script> alert('Failed'); window.location =  '/users/resetpassword'; </script>")
   }
 };
 
