@@ -23,7 +23,7 @@ const { sendEmail } = require("../helper/SendEmail");
 const { userModel } = require("../models/userModel");
 const{userAuth} = require("../middlewares/userAuth")
 const login = async  (req, res) =>{
-  res.render("login", {success:''});
+  res.render("login", { error:null });
 };
 const register = async  (req, res) =>{
   res.render("register", {
@@ -125,7 +125,8 @@ const signin = async (req, res) => {
   console.log(userData)
   if (!userData.email || !userData.password) {
     // req.flash('message','Username and Password are mandatory')
-    return res.status(400).send("Username and Password are mandatory");
+    // return res.status(400).send("Username and Password are mandatory");
+    return res.send("<script> alert('Username and Password are mandatory'); window.location =  '/users/login'; </script>")
   }
   let userNameResult = await userModel.find({
     email: userData.email,
@@ -141,15 +142,16 @@ const signin = async (req, res) => {
       );
       if (passwordCompareresult) {
         var token = jwt.sign({ id: userNameResult[0].id }, key);
-        req.flash('message','Saved Success')
         return res.redirect("/users/dashboard")
       }
     } catch (e) {
       console.log(e);
-      res.status(400).send(`wrong password`);
+      // res.status(400).send(`wrong password`);
+      return res.send("<script> alert('wrong password'); window.location =  '/users/login'; </script>")
     }
   } else {
-    res.status(400).send(`Email is invalid`);
+    // res.status(400).send(`Email is invalid`);
+    return res.send("<script> alert('Email is invalid'); window.location =  '/users/login'; </script>")
   }
 };
 function generateRandomString(length) {
@@ -170,13 +172,15 @@ function generateRandomString(length) {
 
 const forgotPassword = async (req, res) => {
   if (!req.body.email) {
-    return res.status(400).send("Please Enter Email");
+    // return res.status(400).send("Please Enter Email");
+    return res.send("<script> alert('Please Enter Email'); window.location =  '/users/changepassword'; </script>")
   }
   console.log(req.body.email)
   try {
     const data = await userModel.find({ email: req.body.email });
     if (data?.length < 1) {
-        return res.status(400).send("No Account Found please SignUp");
+        // return res.status(400).send("No Account Found please SignUp");
+        return res.send("<script> alert('No Account Found please SignUp'); window.location =  '/users/changepassword'; </script>")
     }
     const randomString = generateRandomString(5);
     const dd = await userModel.findOneAndUpdate({email: req.body.email},{updatePasswordToken:randomString})
@@ -215,9 +219,10 @@ const forgotPassword = async (req, res) => {
       " Admin || Reset Password"
     );
     console.log(r)
-    res.status(200).json({
-      sucess:true
-    });
+    // res.status(200).json({
+    //   sucess:true
+    // });
+   res.send("<script> alert('Success'); window.location =  '/users/resetpassword'; </script>")
   
   } catch (e) {
     console.log(e);
@@ -286,7 +291,9 @@ const updatePassword = async (req, res) => {
       password: hashPassword,
       updatePasswordToken:""
     });
-    res.status(200).json({ success: true });
+    // res.status(200).json({ success: true });
+    // return res.redirect("/users/dashboard")
+    res.send("<script> alert('Success'); window.location =  '/users/login'; </script>")
   } catch (e) {
     console.error(e);
     res.status(400).json({ success: false, message: e });
