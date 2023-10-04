@@ -1,0 +1,140 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<%- include('./include/header'); %>
+
+    <body>
+        <div id="banner">
+            <div class="container-scroller"> -->
+<!-- partial:partials/_navbar.html -->
+<!-- <%- include('./include/topbar'); %> -->
+<!-- partial -->
+<!-- <div class="container-fluid page-body-wrapper"> -->
+<!-- partial:partials/_sidebar.html -->
+<!-- <%- include('./include/sidebar'); %> -->
+
+<!-- partial -->
+<!-- <div class="main-panel">
+                                <div class="content-wrapper">
+                                    <div class="row">
+                                        <div class="col-md-12 grid-margin">
+                                            <div class="row">
+                                                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                                    <h3 class="font-weight-bold">Welcome to Admin Page</h3>
+
+                                                </div>
+                                                <div class="col-12 col-xl-4">
+                                                    <div class="justify-content-end d-flex">
+                                                        <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 grid-margin stretch-card">
+                                            <div class="card tale-bg">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4 stretch-card transparent">
+                                                        <div class="card card-dark-blue">
+                                                            <div class="card-body22">
+
+                                                                <p class="mb-4">Total Users</p>
+                                                                <p class="fs-30 mb-2">
+                                                                </p>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4 stretch-card transparent">
+                                                        <div class="card card-dark-blue">
+                                                            <div class="card-body22">
+                                                                <p class="mb-4">Total Search</p>
+                                                                <p class="fs-30 mb-2">
+
+                                                                </p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 grid-margin transparent">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-tale">
+                                                        <div class="card-body22">
+                                                            <p class="mb-4"> Cancelled Orders</p>
+                                                            <p class="fs-30 mb-2">
+
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-dark-blue">
+                                                        <div class="card-body22">
+                                                            <p class="mb-4">Completed Orders</p>
+                                                            <p class="fs-30 mb-2">
+
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
+
+
+                                <footer class="footer">
+                                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
+                                        </span>
+                                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"><a
+                                                href="#">
+                                            </a></span>
+                                    </div>
+                                </footer> -->
+<!-- partial -->
+<!-- </div> -->
+<!-- main-panel ends -->
+
+<!-- </div> -->
+<!-- page-body-wrapper ends -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- container-scroller -->
+
+<!-- End custom js for this page-->
+<!-- </body> -->
+
+<!-- </html> -->
+
+
+
+
+<!-- <%- include('./include/footer'); %> -->
+
+<!-- <style>
+        .card.card-tale {
+            background: blue;
+            color: #ffffff;
+        }
+
+        .card.card-dark-blue {
+            background: blue;
+            color: #ffffff;
+        }
+    </style> -->

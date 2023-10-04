@@ -98,14 +98,14 @@ app.use(flash());
 
 const userRoutes = require('./admin/application/routes/userRoutes')
 
-app.use(express.static(__dirname + ""));
+// app.use(express.static(__dirname + ""));
 app.set("views", [
   path.join(__dirname, "admin/application/views"),
 
 ]);
 app.set("view engine", "ejs");
 
-
+app.use(express.static(path.join(__dirname, "js")));
 
 
 app.use('/users', userRoutes)

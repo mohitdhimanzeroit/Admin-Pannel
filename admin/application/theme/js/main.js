@@ -1,267 +1,118 @@
 /**
- * Copyright (C) Zero IT Solutions - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited
- * Proprietary and confidential. Dissemination of this information or reproduction 
- * of this material is strictly forbidden unless prior written permission is obtained
- * from Zero IT Solutions.
- 
- * 
- * Written By  : Diksha Jaswal <dikshaj.zeroit@gmail.com>, May 2022
- * Description :
- * Modified By :
+ * Main
  */
-let KWACHA_MAIN = {},
-    base_url = window.location.origin;
 
-KWACHA_MAIN.sweetAlert = function (_obj) {
-    let ajaxTitle = "Done!",
-        ajaxMessage = "successfully Done!",
-        ajaxType = "success";
+'use strict';
 
-    if (typeof _obj == 'object') {
-        if (_obj.title && _obj.title != '') {
-            ajaxTitle = _obj.title;
-        }
-        if (_obj.message && _obj.message != '') {
-            ajaxMessage = _obj.message;
-        }
-        if (_obj.type && _obj.type != '') {
-            ajaxType = _obj.type;
-        }
-    }
-    setTimeout(function () {
-        swal({
-            title: ajaxTitle,
-            text: ajaxMessage,
-            type: ajaxType,
-            allowEscapeKey: false,
-            allowOutsideClick: false
-        }, function () {
-            if (_obj.ajaxRedirect && typeof _obj.ajaxRedirect != 'undefined' && _obj.ajaxRedirect != '') {
-                window.location = KWACHA_BASE_URL + _obj.ajaxRedirect;
-            } else {
-                // $('#commonConfirm').modal('hide');
+let menu, animate;
 
-                $('#submitHandlerBtn').show();
-                $('#loader').hide();
-                $('.submitText').show();
-                $('.updateText').hide();
-                $('.formSubmitHendler').attr("disabled", false);
+(function () {
+  // Initialize menu
+  //-----------------
 
-                if ($('#' + _obj.subButn).length > 0) {
-                    $('#' + _obj.subButn).show();
-                }
-                if ($('#' + _obj.subButnLoder).length > 0) {
-                    $('#' + _obj.subButnLoder).hide();
-                }
-                if ($('button').length > 0) {
-                    $('button').prop('disabled', false);
-                }
-                if (typeof _obj.callback != 'undefined' && typeof (_obj.callback == 'function')) {
-
-                    _obj.callback(_obj.offset);
-                } else {
-
-                    swal.close();
-                }
-            }
-
-        });
-    }, 1000);
-}
-
-
-
-KWACHA_MAIN.loadPageData = function (pageNum, config) {
-
-    let _config = {},
-        containerId = ".dynamic-listing",
-        page_num = pageNum ? pageNum : 0,
-        _url = '',
-        userId = '',
-        sortBy = '',
-        sortOrder = '',
-        keywords = '',
-        perPage = '10',
-        postData = '';
-
-    if (config) {
-        _config = config;
-    }
-
-    if (_config) {
-
-        if (_config.containerId) {
-            containerId = _config.containerId;
-        }
-        if (_config.url) {
-            _url = _config.url;
-        }
-        if (_config.userId) {
-            userId = _config.userId;
-        }
-        if (_config.sortBy) {
-            sortBy = _config.sortBy;
-        }
-        if (_config.sortOrder) {
-            sortOrder = _config.sortOrder;
-        }
-        if (_config.perPage) {
-            perPage = _config.perPage;
-        }
-        if (_config.keywords) {
-            keywords = _config.keywords;
-        }
-
-    }
-    postData = { 'page': page_num, 'keywords': keywords, 'sortBy': sortBy, 'sortBy': sortBy, 'sortOrder': sortOrder, 'userId': userId, "perPage": perPage }
-
-
-    if (_url != '') {
-
-        $.ajax({
-            type: 'POST',
-            url: _url,
-            data: postData,
-            success: function (html) {
-                $("#dataLoader").hide();
-                $("#loading").hide();
-                console.log('.overlay');
-                $('.overlay').fadeOut();
-                $(containerId).html(html);
-            },
-            error: function (error) {
-                errorCode = error.status;
-                if (errorCode == 401) {
-                    let json = JSON.parse(error.responseText);
-                    let errorConfig = {
-                        title: 'Error',
-                        message: json.message,
-                        type: 'error',
-                        ajaxRedirect: '/admin'
-                    }
-                    KWACHA_MAIN.sweetAlert(errorConfig);
-                }
-            }
-        });
-    }
-}
-
-
-
-KWACHA_MAIN.getUserData = function () {
-
-    $.ajax({
-        url: "get-user-data",
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        success: function (data) {
-
-            if (data && data.payload && data.payload.length > 0) {
-
-                $("#userName").html(data.payload[0].name);
-
-                if (data.payload[0].image) {
-                    $("#loginUserImage").attr("src", 'uploads/user_profile_images/' + data.payload[0].image);
-                }
-
-            }
-
-        },
-
-
+  let layoutMenuEl = document.querySelectorAll('#layout-menu');
+  layoutMenuEl.forEach(function (element) {
+    menu = new Menu(element, {
+      orientation: 'vertical',
+      closeChildren: false
     });
+    // Change parameter to true if you want scroll animation
+    window.Helpers.scrollToActive((animate = false));
+    window.Helpers.mainMenu = menu;
+  });
 
-
-
-}
-//KWACHA_MAIN.getUserData();
-
-KWACHA_MAIN.checkLogin = function () {
-    if (!localStorage.getItem("isUserLogin")) {
-        window.location.href = "/";
-    }
-}
-
-KWACHA_MAIN.userLogout = function () {
-
-    localStorage.clear();
-    window.location.href = "/admin";
-
-    $.ajax({
-        url: "user-logout",
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        success: function (data) { },
+  // Initialize menu togglers and bind click on each
+  let menuToggler = document.querySelectorAll('.layout-menu-toggle');
+  menuToggler.forEach(item => {
+    item.addEventListener('click', event => {
+      event.preventDefault();
+      window.Helpers.toggleCollapsed();
     });
-}
-
-
-
-
-//KWACHA_MAIN.getUserData();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  });
+
+  // Display menu toggle (layout-menu-toggle) on hover with delay
+  let delay = function (elem, callback) {
+    let timeout = null;
+    elem.onmouseenter = function () {
+      // Set timeout to be a timer which will invoke callback after 300ms (not for small screen)
+      if (!Helpers.isSmallScreen()) {
+        timeout = setTimeout(callback, 300);
+      } else {
+        timeout = setTimeout(callback, 0);
+      }
+    };
+
+    elem.onmouseleave = function () {
+      // Clear any timers set to timeout
+      document.querySelector('.layout-menu-toggle').classList.remove('d-block');
+      clearTimeout(timeout);
+    };
+  };
+  if (document.getElementById('layout-menu')) {
+    delay(document.getElementById('layout-menu'), function () {
+      // not for small screen
+      if (!Helpers.isSmallScreen()) {
+        document.querySelector('.layout-menu-toggle').classList.add('d-block');
+      }
+    });
+  }
+
+  // Display in main menu when menu scrolls
+  let menuInnerContainer = document.getElementsByClassName('menu-inner'),
+    menuInnerShadow = document.getElementsByClassName('menu-inner-shadow')[0];
+  if (menuInnerContainer.length > 0 && menuInnerShadow) {
+    menuInnerContainer[0].addEventListener('ps-scroll-y', function () {
+      if (this.querySelector('.ps__thumb-y').offsetTop) {
+        menuInnerShadow.style.display = 'block';
+      } else {
+        menuInnerShadow.style.display = 'none';
+      }
+    });
+  }
+
+  // Init helpers & misc
+  // --------------------
+
+  // Init BS Tooltip
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+
+  // Accordion active class
+  const accordionActiveFunction = function (e) {
+    if (e.type == 'show.bs.collapse' || e.type == 'show.bs.collapse') {
+      e.target.closest('.accordion-item').classList.add('active');
+    } else {
+      e.target.closest('.accordion-item').classList.remove('active');
+    }
+  };
+
+  const accordionTriggerList = [].slice.call(document.querySelectorAll('.accordion'));
+  const accordionList = accordionTriggerList.map(function (accordionTriggerEl) {
+    accordionTriggerEl.addEventListener('show.bs.collapse', accordionActiveFunction);
+    accordionTriggerEl.addEventListener('hide.bs.collapse', accordionActiveFunction);
+  });
+
+  // Auto update layout based on screen size
+  window.Helpers.setAutoUpdate(true);
+
+  // Toggle Password Visibility
+  window.Helpers.initPasswordToggle();
+
+  // Speech To Text
+  window.Helpers.initSpeechToText();
+
+  // Manage menu expanded/collapsed with templateCustomizer & local storage
+  //------------------------------------------------------------------
+
+  // If current layout is horizontal OR current window screen is small (overlay menu) than return from here
+  if (window.Helpers.isSmallScreen()) {
+    return;
+  }
+
+  // If current layout is vertical and current window screen is > small
+
+  // Auto update menu collapsed/expanded based on the themeConfig
+  window.Helpers.setCollapsed(true, false);
+})();
