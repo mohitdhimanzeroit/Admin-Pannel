@@ -105,7 +105,7 @@ app.set("views", [
 ]);
 app.set("view engine", "ejs");
 
-app.use(express.static(path.join(__dirname, "js")));
+app.use(express.static("./"));
 
 
 app.use('/users', userRoutes)
