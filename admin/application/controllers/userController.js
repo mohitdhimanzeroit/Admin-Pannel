@@ -21,47 +21,52 @@ const saltRounds = 10;
 const FRONT_END_URL = process.env.FRONT_END_URL;
 const { sendEmail } = require("../helper/SendEmail");
 const { userModel } = require("../models/userModel");
-const{userAuth} = require("../middlewares/userAuth")
-const login = async  (req, res) =>{
-  res.render("login", { error:null });
+const { userAuth } = require("../middlewares/userAuth")
+const login = async (req, res) => {
+  res.render("login", { error: null });
 };
-const register = async  (req, res) =>{
+const register = async (req, res) => {
   res.render("register", {
 
   });
 };
 
-const resetpassword = async  (req, res) =>{
-  const foundUser =  await userModel.findOne({updatePasswordToken: req.query.token});
-    if (!foundUser) {
-      res.json({data: "expire"})
-    }else{
+const resetpassword = async (req, res) => {
+  const foundUser = await userModel.findOne({ updatePasswordToken: req.query.token });
+  if (!foundUser) {
+    res.json({ data: "expire" })
+  } else {
 
-    
-  console.log(req.query)
-  res.render("resetpassword", {
+
+    console.log(req.query)
+    res.render("resetpassword", {
       userId: foundUser?._id
-  });
+    });
+  }
 }
-}
-const changepassword = async  (req, res) =>{
+const changepassword = async (req, res) => {
   res.render("changepassword", {
 
   });
 }
 
-const dashboard = async  (req, res) =>{
+const dashboard = async (req, res) => {
   res.render("dashboard", {
 
   });
 }
-const createuser = async  (req, res) =>{
+const createuser = async (req, res) => {
   res.render("createuser", {
 
   });
 }
-const userslist = async  (req, res) =>{
+const userslist = async (req, res) => {
   res.render("userslist", {
+
+  });
+}
+const searchlist = async (req, res) => {
+  res.render("searchlist", {
 
   });
 }
@@ -71,7 +76,7 @@ const signup = async (req, res) => {
   userData.created_at = new Date();
   if (!userData.email || !userData.password) {
     // res.status(400).send("Username and Password are mandatory");
-     res.send("<script> alert('Username and Password are mandatory'); window.location =  '/users/register'; </script>")
+    res.send("<script> alert('Username and Password are mandatory'); window.location =  '/users/register'; </script>")
     return;
   }
   if (userData.password?.length < 8) {
@@ -116,7 +121,7 @@ const signup = async (req, res) => {
                 </div>
             </div>
             `;
-          console.log(html)
+      console.log(html)
       let r = await sendEmail(
         userData.email,
         html,
@@ -138,7 +143,7 @@ const signin = async (req, res) => {
   var userData = req.body;
   console.log(userData)
   if (!userData.email || !userData.password) {
-   
+
     // return res.status(400).send("Username and Password are mandatory");
     return res.send("<script> alert('Username and Password are mandatory'); window.location =  '/users/login'; </script>")
   }
@@ -193,14 +198,14 @@ const forgotPassword = async (req, res) => {
   try {
     const data = await userModel.find({ email: req.body.email });
     if (data?.length < 1) {
-        // return res.status(400).send("No Account Found please SignUp");
-        return res.send("<script> alert('No Account Found please SignUp'); window.location =  '/users/changepassword'; </script>")
+      // return res.status(400).send("No Account Found please SignUp");
+      return res.send("<script> alert('No Account Found please SignUp'); window.location =  '/users/changepassword'; </script>")
     }
     const randomString = generateRandomString(5);
-    const dd = await userModel.findOneAndUpdate({email: req.body.email},{updatePasswordToken:randomString})
+    const dd = await userModel.findOneAndUpdate({ email: req.body.email }, { updatePasswordToken: randomString })
     console.log(dd);
     var token = jwt.sign({ id: data[0]._id }, key);
-      let url = `http://localhost:8081/users/resetpassword?token=${randomString}`;
+    let url = `http://localhost:8081/users/resetpassword?token=${randomString}`;
     // let html = `<a href=${url}>click here</a> to Reset Your password`
     let html = `
         
@@ -236,8 +241,8 @@ const forgotPassword = async (req, res) => {
     // res.status(200).json({
     //   sucess:true
     // });
-   res.send("<script> alert('Success'); window.location =  '/users/resetpassword'; </script>")
-  
+    res.send("<script> alert('Success'); window.location =  '/users/resetpassword'; </script>")
+
   } catch (e) {
     console.log(e);
     res.status(500).json({
@@ -295,15 +300,15 @@ const validateUser = async (req, res) => {
 };
 
 const updatePassword = async (req, res) => {
-  console.log(`sdds`,req.query.userId)
+  console.log(`sdds`, req.query.userId)
   try {
     console.log(req.body);
     let { newpwd } = req.body;
-  
+
     let hashPassword = await passwordEncyption(newpwd);
-    let data = await userModel.findByIdAndUpdate({_id:req.query.userId}, {
+    let data = await userModel.findByIdAndUpdate({ _id: req.query.userId }, {
       password: hashPassword,
-      updatePasswordToken:""
+      updatePasswordToken: ""
     });
     // res.status(200).json({ success: true });
     // return res.redirect("/users/dashboard")
@@ -328,7 +333,7 @@ const passwordEncyption = (password) => {
 };
 
 const passwordCompare = (password, hash) => {
-  // console.log(`password and hash::`,password,hash)
+
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, hash, function (err, result) {
       if (result) {
@@ -343,10 +348,9 @@ const passwordCompare = (password, hash) => {
 };
 
 module.exports = {
-login,
-register,
+  login,
+  register,
   signup,
-
   signin,
   passwordCompare,
   verifyEmail,
@@ -355,8 +359,9 @@ register,
   validateUser,
   updatePassword,
   changepassword,
-resetpassword,
-dashboard,
-createuser,
-userslist,
+  resetpassword,
+  dashboard,
+  createuser,
+  userslist,
+  searchlist,
 }

@@ -3,6 +3,7 @@ const router=express.Router()
 router.use(express.urlencoded({ extended: false }))
 router.use(express.json())
 const userRoutes=require('../controllers/userController')
+// const userRoutes=require('../controllers/adminController')
 const {userAuth} =require('../middlewares/userAuth')
 
 router.post('/signup',userRoutes.signup)
@@ -17,9 +18,10 @@ router.get('/resetpassword',userRoutes.resetpassword)
 router.post('/verifyEmail',userRoutes.verifyEmail)
 router.get('/createuser',userRoutes.createuser)
 router.get('/userslist',userRoutes.userslist)
+router.get('/searchlist',userRoutes.searchlist)
 router.post('/validateUser',userRoutes.validateUser)
 router.post('/updatePassword',userRoutes.updatePassword)
-
+// router.post('/insertUser',userRoutes.insertUser)
 
 
 // router.post('/signup')
