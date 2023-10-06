@@ -15,7 +15,8 @@ router.post('/forgotPassword',userRoutes.forgotPassword)
 router.get('/changepassword',userRoutes.changepassword)
 router.get('/resetpassword',userRoutes.resetpassword)
 router.post('/verifyEmail',userRoutes.verifyEmail)
-
+router.get('/createuser',userRoutes.createuser)
+router.get('/userslist',userRoutes.userslist)
 router.post('/validateUser',userRoutes.validateUser)
 router.post('/updatePassword',userRoutes.updatePassword)
 

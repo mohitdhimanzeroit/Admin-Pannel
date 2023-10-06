@@ -55,6 +55,16 @@ const dashboard = async  (req, res) =>{
 
   });
 }
+const createuser = async  (req, res) =>{
+  res.render("createuser", {
+
+  });
+}
+const userslist = async  (req, res) =>{
+  res.render("userslist", {
+
+  });
+}
 const signup = async (req, res) => {
   userData = req.body;
   console.log(userData);
@@ -347,4 +357,6 @@ register,
   changepassword,
 resetpassword,
 dashboard,
+createuser,
+userslist,
 }
