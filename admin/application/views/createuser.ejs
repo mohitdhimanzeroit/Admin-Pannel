@@ -620,3 +620,83 @@
     margin-bottom: 60px;
   }
 </style>
+<script>
+
+
+
+  $(function () {
+    $("#insertUser").validate({
+      errorPlacement: function (error, element) {
+        $(element)
+          .closest("form")
+          .find("label[for='" + element.attr("id") + "']")
+          .append(error);
+      },
+
+      errorElement: "span",
+      rules: {
+        userName: {
+          required: true,
+          maxlength: 20,
+        },
+
+        userEmail: {
+          required: true,
+          maxlength: 50,
+        },
+
+        userNumber: {
+          required: true,
+          minlength: 10,
+        },
+
+        userPassword: {
+          required: true,
+          maxlength: 20,
+        },
+
+        userGender: {
+          required: true,
+          maxlength: 20,
+        },
+        userType: {
+          required: true,
+          maxlength: 20,
+        },
+      },
+      submitHandler: function () {
+        let formData = $("#insertUser").serialize();
+
+        $.ajax({
+          url: "/users/insertuser",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+          data: formData,
+          cache: false,
+          processData: false,
+          method: "POST",
+          type: "POST",
+          success: function (_res) {
+            $("#insertUser").trigger("reset");
+            let successConfig = {
+              title: "Confirmation",
+              message: `Operation performed successfully.`,
+              type: "success",
+            };
+            KWACHA_MAIN.sweetAlert(successConfig);
+          },
+          error: function (e) {
+            let responseText = JSON.parse(e.responseText);
+            let errorConfig = {
+              title: "Error",
+              message: responseText.message,
+              type: "error",
+            };
+            KWACHA_MAIN.sweetAlert(errorConfig);
+          },
+        });
+      },
+    });
+  });
+</script>

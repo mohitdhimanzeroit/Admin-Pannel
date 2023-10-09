@@ -97,19 +97,20 @@ app.use(session({
 app.use(flash());
 
 const userRoutes = require('./admin/application/routes/userRoutes')
-
+const user = require('./app/application/routes/user')
 // app.use(express.static(__dirname + ""));
 app.set("views", [
   path.join(__dirname, "admin/application/views"),
 
 ]);
 app.set("view engine", "ejs");
+require("./app");
 
 app.use(express.static("./"));
 
 
 app.use('/users', userRoutes)
-
+app.use('/user', user)
 
 
 

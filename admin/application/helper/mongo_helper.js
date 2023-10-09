@@ -51,36 +51,36 @@ const options = {
 //  * @developer    :
 //  * @modification :
 //  */
-// mongoObj.insert = async function (dataObj, tableName) {
-//   let deferred = q.defer();
+mongoObj.insert = async function (dataObj, tableName) {
+  let deferred = q.defer();
 
-//   if (dataObj && tableName) {
-//     MongoClient.connect(mongo_url,{
-//            maxPoolSize: 50,
-//             wtimeoutMS: 2500,
-//       //       // useNewUrlParser: true
-//          }, options, function (err, db) {
-//       if (err) {
-//         deferred.resolve(false);
-//       } else {
-//         let database = db.db(dbName);
+  if (dataObj && tableName) {
+    MongoClient.connect(mongo_url,{
+           maxPoolSize: 50,
+            wtimeoutMS: 2500,
+      //       // useNewUrlParser: true
+         }, options, function (err, db) {
+      if (err) {
+        deferred.resolve(false);
+      } else {
+        let database = db.db(dbName);
 
-//         database.collection(tableName).insertOne(dataObj, function (err, res) {
-//           if (err) {
-//             deferred.resolve(false);
-//           }
+        database.collection(tableName).insertOne(dataObj, function (err, res) {
+          if (err) {
+            deferred.resolve(false);
+          }
 
-//           if (res) {
-//             db.close();
-//             deferred.resolve(true);
-//           }
-//         });
-//       }
-//     });
-//   }
+          if (res) {
+            db.close();
+            deferred.resolve(true);
+          }
+        });
+      }
+    });
+  }
 
-//   return deferred.promise;
-// };
+  return deferred.promise;
+};
 
 // /**
 //  * This function is used to get data from Mongo tables.

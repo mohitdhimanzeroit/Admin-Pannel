@@ -2,8 +2,8 @@ const { async, defer } = require("q");
 const q = require("q"),
   passwordHash = require("password-hash"),
   { v4 } = require("uuid"),
-  helper = require("../helpers/index"),
-  mongoHelper = require("../helpers/mongo_helper");
+  helper = require("../helper/index"),
+  mongoHelper = require("../helper/mongo_helper");
 
 const userModel = {};
 /**
@@ -42,7 +42,7 @@ userModel.insertUser = async function (body, userId) {
       uc_updated: date,
     };
 
-    let results = await mongoHelper.insert(insertObj, "users_credential");
+    let results = await mongoHelper.insert(insertObj, "users");
 
     if (results) {
       deferred.resolve(true);
@@ -63,7 +63,7 @@ userModel.getuserlist = async function (body) {
   };
   let userArray = await mongoHelper.getuserListData(
     UserObj,
-    "users_credential",
+    "users",
     body
   );
   if (userArray && userArray.data && userArray.data.length > 0) {
