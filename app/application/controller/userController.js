@@ -104,8 +104,31 @@ const sendEmail = async(req, res) => {
 
 }
 
+const verifyEmail = async (req, res) =>{
+  try {
+    const { email, otp } = req.body;
+console.log(req.body)
+    const user = await Email_uc.findOne({ email });
+     console.log(user)
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      console.log(!user)
+    } else {
+      bcrypt.compare(otp, user.otp, (err, result) => {
+        if (err || !result) {
+          res.status(401).json({ error: 'OTP verification failed' });
+        } else {
+          res.status(200).json({ message: 'OTP verified successfully' });
+        }
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 module.exports = {
     signup,
     sendEmail,
-    verifyOTP
+    verifyOTP,
+    verifyEmail,
 };
