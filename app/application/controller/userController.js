@@ -1,156 +1,624 @@
-const express = require('express');
-const router = express.Router();
-const Email_uc = require('../model/email');
+/**
+ * Copyright (C) Zero IT Solutions - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential. Dissemination of this information or reproduction 
+ * of this material is strictly forbidden unless prior written permission is obtained
+ * from Zero IT Solutions.
+ 
+ * 
+ * Written By  : Anoop kumar <anoop.zeroit@gmail.com>, aug 2023
+ * Description :
+ * Modified By :
+ */
+const { async } = require("q");
+const helper = require("../helpers/index"),
+    mongoHelper = require('../helpers/mongo_helpers'),
+    passwordHash = require("password-hash"),
+    authModel = require("../model/user");
 
-const nodemailer = require('nodemailer');
-const User_uc = require('../model/user')
-const bcrypt = require('bcrypt-nodejs');
-const jwt = require('jsonwebtoken');
-const twilio = require('twilio');
+
+fs = require('fs'),
+    path = require('path'),
+    Busboy = require('busboy');
+
+let authObj = {}
 
 
-const { Client } = require('twilio/lib/twiml/VoiceResponse');
-const Phone_uc = require('../model/phone');
+/**
+ * 
+ * This function is using to
+ * @param     :
+ * @returns   :
+ * @developer :
+ * 
+ */
+authObj.register = async function (req, res) {
 
-const { TWILIO_SERVICE_SID, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
-const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, {
-  lazyLoading: true
-})
-//----SignUp Process ----//
-const signup = async (req, res, next) => {
+    if (req && req.body && req.body.fullname && req.body.password) {
 
-  try {
-    const { fullname, password } = req.body;
-  console.log(req.body)
-    // Create a new user
-    const newInsert = new User_uc({
-      fullname,
-      password,
-    });
+        let obj = {
+            message: '',
+            status: false
+        };
 
-    // Save the user to the database
-    await newInsert.save();
-    console.log(newInsert)
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+        if (req.body.fullname) {
+            obj.message = 'Please enter the fullname';
+            helper.successHandler(res, obj);
+            return;
+        }
+
+        if (req.body.password) {
+            obj.message = 'Please enter the password';
+            helper.successHandler(res, obj);
+            return;
+        }
+
+        let phoneObj = {
+            'uc_phone': req.body.phone,
+            'uc_country': req.body.countryCode
+        };
+        let userDetailObj = await mongoHelper.getData(phoneObj, 'users_credential');
+
+        if (userDetailObj && userDetailObj.length > 0
+            && userDetailObj[0].uc_phone && userDetailObj[0].uc_permanent_deleted != "1") {
+
+            let statusCode = '',
+                message = '';
+
+            if (userDetailObj[0].uc_active == '0') {
+
+                let sendOtp = await authModel.sendActivationCodeOnPhone(req.body.countryCode + req.body.phone);
+
+                if (sendOtp == true) {
+
+                    helper.successHandler(res, {});
+                    return;
+
+                } else {
+
+                    helper.successHandler(res, {
+                        status: false,
+                        message: 'Failed, Please try again.',
+                        code: 'RE-100011'
+                    });
+                    return;
+                }
+
+            } else if (userDetailObj[0].uc_deleted == '1') {
+
+                message = 'User prohibited, please contact UberMaa support team for help.';
+
+            } else if (userDetailObj[0].uc_active == '1') {
+
+                statusCode = "ZT-E1001",
+                    message = 'User already exists. Please signup with other account.';
+
+            }
+
+            let obj = {
+                code: statusCode,
+                message: message,
+                status: false
+            };
+
+            helper.successHandler(res, obj);
+
+        } else {
+
+            let result = await authModel.register(req.body);
+
+            if (result) {
+
+                helper.successHandler(res, {});
+
+            } else {
+
+                helper.successHandler(res, {
+                    status: false,
+                    message: 'Failed, Please try again.',
+                    code: 'RE-10001'
+                });
+            }
+        }
+
+    } else {
+
+        let obj = {
+            code: "ZT-E20011111111111",
+            message: 'Please Fill required  fields.',
+            status: false
+        };
+        helper.successHandler(res, obj);
+    }
 
 }
-const sendOtp = async (req, res, next) => {
-  
-  try {
-    const { countryCode, phoneNumber } = req.body;
+/**
+ * 
+ * This function is using to
+ * @param     :
+ * @returns   :
+ * @developer :
+ * 
+ */
+authObj.registerWithEmail = async function (req, res) {
 
-    const newInsert = new Phone_uc({
-      countryCode,
-      phoneNumber,
-    });
 
-    // Save the user to the database
-    await newInsert.save();
-    const otpResponse = await client.verify.v2.services(TWILIO_SERVICE_SID)
-      .verifications.create({
-        to: `+${countryCode}${phoneNumber}`,
-        channel: "sms",
+    let userId = helper.getUUIDByToken(req);
+    let email = req.body.email;
+    let hashedPassword = passwordHash.generate(req.body.password);
+    if (req && req.body.name && req.body.email && hashedPassword &&
+        req.body.nickname && req.body.dob && req.body.sex && req.body.country
+        && req.body.eu_privacy && req.body.nationality && req.body.sexual_orientation
+        && req.body.type && req.body.countryCode
+    ) {
 
-      });
-    res.status(200).send(`OTP send successfully!: ${JSON.stringify(otpResponse)}`);
-    // res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    res.status(error?.status || 400).send(error?.message || `Something went wrong!`)
-    // res.status(500).json({ error: "unauthorized" })
-  }
+        let validEmail = await helper.isEmailValid(req.body.email);
+
+        let userEmailData = '';
+        userEmailData = await authModel.checkEmailExist(req.body.email);
+        if (userEmailData && userEmailData.length > 0) {
+            let updateObj = {
+                uc_email: email,
+            };
+
+            let selectObj = {
+                uc_uuid: userId,
+            };
+
+            let results = await mongoHelper.updateData(selectObj, "users_credential", updateObj);
+            let resultArray = await mongoHelper.getData(updateObj, "users_credential");
+            let payload = {
+                iat: Date.now(),
+                "userId": resultArray[0].uc_uuid,
+            },
+                token = jwt.sign(payload, '@&*(29783-d4343daf4dd*&@&^#^&@#');
+            let commonData = {
+                "uc_token": token,
+                "uc_name": resultArray[0].uc_name,
+                "uc_email": resultArray[0].uc_email,
+
+            };
+            let obj = {
+                payload: commonData
+            };
+            helper.successHandler(res, obj);
+
+
+        } else {
+
+            let results = await authModel.insertUserGoogleData(req.body);
+
+            if (results) {
+
+                let emailObj = {
+                    'uc_email': email,
+                };
+                let resultArray = await mongoHelper.getData(emailObj, "users_credential");
+                let payload = {
+                    iat: Date.now(),
+                    "userId": resultArray[0].uc_uuid,
+                },
+                    token = jwt.sign(payload, '@&*(29783-d4343daf4dd*&@&^#^&@#');
+                let commonData = {
+                    "uc_token": token,
+                    "uc_name": resultArray[0].uc_name,
+                    "uc_email": resultArray[0].uc_email,
+                    "uc_type": resultArray[0].uc_type,
+
+                };
+                let obj = {
+                    payload: commonData
+                };
+                helper.successHandler(res, obj);
+
+
+            } else {
+
+                helper.errorHandler(res, {
+                    status: false,
+                    code: 'RE-10002'
+                }, 200);
+
+            }
+
+        }
+
+    }
+    else {
+        helper.errorHandler(res, {
+            code: "ASL-E1002",
+            message: "Please fill manadatory fields.",
+            status: false,
+        });
+    }
+
+}
+
+/**
+ * Login Controller
+ * @param        :
+ * @returns      :
+ * @developer    : 
+ * @modification : 
+ */
+authObj.loginWithPhone = async function (req, res) {
+
+    if (req && req.body && req.body.phone && req.body.countryCode && req.body.password && req.body.deviceToken && req.body.deviceId && req.body.devicePlatform) {
+
+        let phoneObj = {
+            'uc_phone': req.body.phone,
+            'uc_country': req.body.countryCode
+        };
+        let userData = await mongoHelper.getData(phoneObj, 'users_credential');
+
+        if (userData && userData.length > 0 && userData[0].uc_permanent_deleted != "1") {
+
+            let verifyPassword = passwordHash.verify(req.body.password, userData[0].uc_password);
+
+            if (userData[0].uc_active && userData[0].uc_active == '0') {
+
+                let obj = {
+                    code: "CCS-E1000",
+                    message: 'User doesn`t exist.',
+                    status: false
+                };
+                helper.errorHandler(res, obj, 200);
+
+            } else if (userData[0].uc_deleted && userData[0].uc_deleted == '1') {
+
+                let obj = {
+                    code: "CCS-E1001",
+                    message: 'User prohibited, please contact UberMaa support team for help.',
+                    status: false
+                };
+                helper.errorHandler(res, obj, 200);
+
+            } else if (!verifyPassword) {
+
+                let obj = {
+                    code: "CCS-E1002",
+                    message: 'Incorrect username or password.',
+                    status: false
+                };
+
+                helper.errorHandler(res, obj, 200);
+
+            } else {
+
+                if (userData[0].uc_active == '1') {
+
+                    let result = await authModel.login(req.body);
+
+                    if (result) {
+
+                        let payload = {
+                            iat: Date.now(),
+                            "userId": result.uc_uuid,
+                        },
+
+                            token = jwt.sign(payload, '@&*(29783-d4343daf4dd*&@&^#^&@#');
+                        result.token = token;
+                        let commonData = {
+                            "token": result.token,
+                            "userType": result.uc_user_type,
+                            "onlineStatus": result.uc_online_status
+                        };
+
+                        let obj = {
+                            message: 'Login successfully.',
+                            payload: commonData
+                        };
+
+                        helper.successHandler(res, obj);
+
+                    } else {
+
+                        let obj = {
+                            code: "CCS-E10003",
+                            status: false
+                        };
+                        helper.errorHandler(res, obj, 200);
+
+                    }
+
+                } else {
+
+                    let obj = {
+                        code: "CCS-E1004",
+                        message: 'Login credentials are incorrect.',
+                        status: false
+                    };
+                    helper.errorHandler(res, obj, 200);
+
+                }
+            }
+
+        } else {
+
+            let obj = {
+                code: "CCS-E1005",
+                message: 'Account does not exist.',
+                status: false
+            };
+            helper.errorHandler(res, obj, 200);
+
+        }
+
+    } else {
+
+        let obj = {
+            code: "CCS-E1006",
+            message: 'All fields are required',
+            status: false
+        };
+        helper.errorHandler(res, obj, 200);
+
+    }
 
 }
 
 
-const verifyOTP = async (req, res, next) => {
-  const { countryCode, phoneNumber, otp } = req.body;
-  console.log(req.body)
-  try {
-    const verifiedResponse = await client.verify.v2.services(TWILIO_SERVICE_SID)
-      .verificationChecks.create({
-        to: `+${countryCode}${phoneNumber}`,
-        code: otp,
+/**
+ * resend activation code  via phone no. 
+ * @param     : phone 
+ * @returns   :
+ * @developer : 
+ */
+authObj.resendActivationPhoneCode = async function (req, res) {
 
-      })
-      .then(verification_check => console.log(verification_check.status));
-    res.status(200).send(`OTP verified successfuly!: ${JSON.stringify(verifiedResponse)}`);
-  } catch (error) {
-    res.status(error?.status || 400).send(error?.message || 'Something went wrong!');
-  }
+    if (req && req.body && req.body.phone && req.body.countryCode) {
+
+
+        let response = await authModel.sendActivationCodeOnPhone(req.body.countryCode + req.body.phone);
+
+        if (response) {
+
+            helper.successHandler(res, {
+                message: 'Account activation code sent to your phone.'
+            });
+
+        } else {
+
+            helper.errorHandler(res, {
+                code: 'CCS-E2001',
+                message: 'Somthing went wrong. ',
+                status: false
+            }, 200);
+
+        }
+
+    } else {
+
+        helper.errorHandler(res, {
+            code: 'CCS-E2001',
+            message: 'All fields are required.',
+            status: false
+        }, 200);
+
+    }
+
 }
-const sendEmail = async (req, res) => {
-  try {
-    const { email } = req.body;
-    console.log(req.body)
-    // Generate a random OTP (for example, a 6-digit random number)
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const newEmail = new Email_uc({
-      email,
-      otp,
-    });
 
-    // Save the user to the database
-    await newEmail.save();
-    console.log(newEmail)
-    // Send OTP via email
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'mohitdhiman.zeroit@gmail.com',
-        pass: 'ptqc vgnm lskb lgaq',
-      },
-    });
 
-    const mailOptions = {
-      from: 'zeroitsolution@gmail.com',
-      to: email,
-      subject: 'OTP Verification',
-      text: `Your OTP is: ${otp}`,
+
+
+
+
+
+/**
+ * Used to 
+ * Created By 	: 
+ * Modified By 	: 
+ */
+authObj.loginWithEmail = async function (req, res) {
+    let obj = {
+        code: "",
+        message: 'Something went wrong',
+        status: false
     };
 
-    await transporter.sendMail(mailOptions);
+    if (req && req.body && req.body.email && req.body.password) {
 
-    res.status(200).json({ message: 'User created successfully. Check your email for OTP.' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+        let checkEmailObj = {
+            uc_email: req.body.email
+        },
+            checkEmailDetail = await mongoHelper.getData(checkEmailObj, 'users_credential');
 
-}
+        if (checkEmailDetail && checkEmailDetail.length > 0) {
 
-const verifyEmail = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-    console.log(req.body)
-    const user = await Email_uc.findOne({ email });
-    console.log(user)
-    if (!user) {
-      res.status(404).json({ error: 'User not found' });
-      console.log(!user)
-    } else {
-      bcrypt.compare(otp, user.otp, (err, result) => {
-        if (err || !result) {
-          res.status(401).json({ error: 'OTP verification failed' });
+            let userData = checkEmailDetail[0];
+
+            if (userData.uc_password && passwordHash.verify(req.body.password, userData.uc_password)) {
+
+                if (userData && userData.uc_deleted == 1) {
+
+                    obj.message = 'Your account has been blocked , Plese contact to Kwacha support';
+                    helper.errorHandler(res, obj, 500);
+
+                } else if (userData && userData.uc_active == 0) {
+
+                    obj.message = 'Your account is not active';
+                    helper.errorHandler(res, obj, 500);
+
+                } else if (userData && userData.uc_deleted == 0 && userData.uc_active == 1) {
+
+                    let payload = {
+                        iat: Date.now(),
+                        "userId": userData.uc_uuid,
+                        "email": userData.uc_email,
+                        "name": userData.uc_name,
+
+                    };
+                    let token = jwt.sign(payload, "@&*(29783-d4343daf4dd*&@&^#^&@#");
+
+
+                    let commonData = {
+                        "uc_name": userData.uc_name_,
+                        "uc_email": userData.uc_email,
+                        "token": token
+                    };
+
+                    obj.payload = commonData;
+                    obj.message = 'Login successfully';
+                    helper.successHandler(res, obj);
+
+                } else {
+                    helper.errorHandler(res, obj, 500);
+                }
+
+            } else {
+                obj.message = 'Email and password do not match. Please try again.';
+                helper.errorHandler(res, obj, 500);
+            }
+
         } else {
-          res.status(200).json({ message: 'OTP verified successfully' });
+            obj.message = 'Your account does not exist.';
+            helper.errorHandler(res, obj, 500);
         }
-      });
+
+    } else {
+
+        helper.errorHandler(res, {
+            code: "ZT-E1000",
+            message: "Please fill manadatory fields."
+        }, 500);
+
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+
 }
 
-//----- SignIn -----//
+/**
+ * Login Controller
+ * @param        :
+ * @returns      :
+ * @developer    :
+ * @modification :
+ */
+authObj.loginWithPhoneEmail = async function (req, res) {
+
+    if (req && req.body && req.body.phone && req.body.countryCode && req.body.password && req.body.deviceToken && req.body.deviceId && req.body.devicePlatform) {
+        let type = 'PHONE';
+        let phoneObj = {
+            'uc_phone': req.body.phone,
+        };
+        let userData = await mongoHelper.getData(phoneObj, 'users_credential');
+
+        if (userData.length == 0) {
+            type = 'EMAIL';
+            let phoneObj = {
+                'uc_email': req.body.phone,
+            };
+
+            userData = await mongoHelper.getData(phoneObj, 'users_credential');
+        }
+
+        if (userData && userData.length > 0) {
+
+            let verifyPassword = passwordHash.verify(req.body.password, userData[0].uc_password);
+
+            if (userData[0].uc_active && userData[0].uc_active == '0') {
+                let obj = {
+                    code: "CCS-E1000",
+                    message: 'User doesn`t exist.',
+                    status: false
+                };
+                helper.errorHandler(res, obj, 200);
+
+            } else if (userData[0].uc_deleted && userData[0].uc_deleted == '1') {
+
+                let obj = {
+                    code: "CCS-E1001",
+                    message: 'User prohibited, please contact UrTap support team for help.',
+                    status: false
+                };
+                helper.errorHandler(res, obj, 200);
+
+            } else if (!verifyPassword) {
+
+                let obj = {
+                    code: "CCS-E1002",
+                    message: 'Incorrect username or password.',
+                    status: false
+                };
+
+                helper.errorHandler(res, obj, 200);
+
+            } else {
+
+                if (userData[0].uc_active == '1') {
+
+                    let result = await authModel.loginWithPhoneEmail(req.body, type);
+
+                    if (result) {
+
+                        let payload = {
+                            iat: Date.now(),
+                            "userId": result.uc_uuid,
+                        },
+
+                            token = jwt.sign(payload, '@&*(29783-d4343daf4dd*&@&^#^&@#');
+                        console.log(token);
+                        result.token = token;
+                        let commonData = {
+                            "token": result.token,
+                            "userType": result.uc_user_type,
+                            "onlineStatus": result.uc_online_status
+                        };
+
+                        let obj = {
+                            message: 'Login successfully.',
+                            payload: commonData
+                        };
+
+                        helper.successHandler(res, obj);
+
+                    } else {
+
+                        let obj = {
+                            code: "CCS-E10003",
+                            status: false
+                        };
+                        helper.errorHandler(res, obj, 200);
+
+                    }
+
+                } else {
+
+                    let obj = {
+                        code: "CCS-E1004",
+                        message: 'Login credentials are incorrect.',
+                        status: false
+                    };
+                    helper.errorHandler(res, obj, 200);
+
+                }
+            }
+
+        } else {
+
+            let obj = {
+                code: "CCS-E1005",
+                message: 'Account does not exist.',
+                status: false
+            };
+            helper.errorHandler(res, obj, 200);
+
+        }
+
+    } else {
+
+        let obj = {
+            code: "CCS-E1006",
+            message: 'All fields are required',
+            status: false
+        };
+        helper.errorHandler(res, obj, 200);
+
+    }
+}
 
 
-module.exports = {
-  signup,
-  sendOtp,
-  sendEmail,
-  verifyOTP,
-  verifyEmail,
-};
+
+
+module.exports = authObj;
